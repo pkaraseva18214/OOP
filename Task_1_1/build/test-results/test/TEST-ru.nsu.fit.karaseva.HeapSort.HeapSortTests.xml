@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ru.nsu.fit.karaseva.HeapSort.HeapSortTests" tests="5" skipped="0" failures="0" errors="0" timestamp="2019-10-02T14:08:16" hostname="DESKTOP-5CS3CQP" time="0.043">
+  <properties/>
+  <testcase name="test1" classname="ru.nsu.fit.karaseva.HeapSort.HeapSortTests" time="0.027"/>
+  <testcase name="test2" classname="ru.nsu.fit.karaseva.HeapSort.HeapSortTests" time="0.002"/>
+  <testcase name="test3" classname="ru.nsu.fit.karaseva.HeapSort.HeapSortTests" time="0.001"/>
+  <testcase name="test4" classname="ru.nsu.fit.karaseva.HeapSort.HeapSortTests" time="0.001"/>
+  <testcase name="test5" classname="ru.nsu.fit.karaseva.HeapSort.HeapSortTests" time="0.002"/>
+  <system-out><![CDATA[Test 1 passed successfully
+Test 2 passed successfully
+Test 3 passed successfully
+Test 4 passed successfully
+Test 5 passed successfully
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
