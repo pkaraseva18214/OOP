@@ -18,6 +18,12 @@ public class HeapSort {
         }
     }
 
+    /**
+     *This method sort array using algorithm of HeapSort.
+     * @param arr array to sort
+     * @return arr sorted array
+     */
+
     public static int[] heapSort(int[] arr) {
         if (arr == null)
             return null;
