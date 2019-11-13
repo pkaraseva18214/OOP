@@ -31,7 +31,9 @@
     </option>
   </component>
   <component name="ProjectId" id="1SVw9Bstnt5hKrs55r8Lu9j7g4j" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Desktop/Github/OOP/Task_1_2" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -69,12 +71,12 @@
       <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="GraphTests.test4" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="GraphTests.test0" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;ru.nsu.fit.karaseva.graph.GraphTests.test4&quot;" />
+        <option name="scriptParameters" value="--tests &quot;ru.nsu.fit.karaseva.graph.GraphTests.test0&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -89,12 +91,12 @@
       <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="GraphTests.test5" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="GraphTests.test1" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;ru.nsu.fit.karaseva.graph.GraphTests.test5&quot;" />
+        <option name="scriptParameters" value="--tests &quot;ru.nsu.fit.karaseva.graph.GraphTests.test1&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -109,12 +111,12 @@
       <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="GraphTests.test6" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="GraphTests.test2" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;ru.nsu.fit.karaseva.graph.GraphTests.test6&quot;" />
+        <option name="scriptParameters" value="--tests &quot;ru.nsu.fit.karaseva.graph.GraphTests.test2&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -129,12 +131,12 @@
       <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="GraphTests.test7" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="GraphTests.test3" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;ru.nsu.fit.karaseva.graph.GraphTests.test7&quot;" />
+        <option name="scriptParameters" value="--tests &quot;ru.nsu.fit.karaseva.graph.GraphTests.test3&quot;" />
         <option name="taskDescriptions">
           <list />
         </option>
@@ -152,10 +154,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.GraphTests" />
-        <item itemvalue="Gradle.GraphTests.test7" />
-        <item itemvalue="Gradle.GraphTests.test6" />
-        <item itemvalue="Gradle.GraphTests.test5" />
-        <item itemvalue="Gradle.GraphTests.test4" />
+        <item itemvalue="Gradle.GraphTests.test2" />
+        <item itemvalue="Gradle.GraphTests.test1" />
+        <item itemvalue="Gradle.GraphTests.test0" />
+        <item itemvalue="Gradle.GraphTests.test3" />
       </list>
     </recent_temporary>
   </component>

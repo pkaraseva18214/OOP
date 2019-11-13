@@ -1,6 +1,10 @@
 package ru.nsu.fit.karaseva.graph;
 
+/**
+ * A class that implements the creation of the edges.
+ */
 public class Edge {
+
    private int v1;
    private int v2;
    private int distance;
@@ -16,22 +20,26 @@ public class Edge {
         v2 = newV2;
         distance = nDist;
     }
+
     /**
      * @return The vertex from which the edge of the graph
      */
-    public int getVerticeFrom() {
+    public int getVertexFrom() {
         return v1;
     }
+
     /**
      * @return The vertex to which the edge of the graph
      */
-    public int getVerticeTo() {
+    public int getVertexTo() {
         return v2;
     }
+
     /**
      * @return Distance between two vertices
      */
     public int getDistance() {
         return distance;
     }
+
 }

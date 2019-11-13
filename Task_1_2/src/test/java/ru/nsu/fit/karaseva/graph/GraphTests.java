@@ -2,13 +2,27 @@ package ru.nsu.fit.karaseva.graph;
 
 import org.junit.Assert;
 import org.junit.Test;
+
 public class GraphTests {
+
     @Test
     public void test1() {
         Graph graph = null;
-        Distance distance = new Distance(0, graph);
-        int dist = distance.getDist(1);
+        Distance distance = new Distance();
+        int dist = distance.getTheShortestDistance(graph, 1, 1);
         Assert.assertEquals(-1, dist);
+    }
+
+    @Test
+    public void test0(){
+        Edge[] arr = new Edge[3];
+        arr[0] = new Edge(0,1, 1);
+        arr[1] = new Edge(1,2,1);
+        arr[2] = new Edge(2,3,5);
+        Graph graph = new Graph(4, arr);
+        Distance distance = new Distance();
+        int d = distance.getTheShortestDistance(graph, 1, 3);
+        Assert.assertEquals(6, d);
     }
 
     @Test
@@ -29,8 +43,8 @@ public class GraphTests {
         arr[12] = new Edge(8,6, 1);
         arr[13] = new Edge(3,6, 1);
         Graph graph = new Graph(11, arr);
-        Distance distance = new Distance(0, graph);
-        int dist = distance.getDist(3);
+        Distance distance = new Distance();
+        int dist = distance.getTheShortestDistance(graph, 0, 3);
         Assert.assertEquals(2, dist);
     }
 
@@ -40,8 +54,8 @@ public class GraphTests {
         arr[0] = new Edge(0, 2, 3);
         arr[1] = new Edge(4, 2, 3);
         Graph graph = new Graph(5, arr);
-        Distance d = new Distance(0, graph);
-        int dist = d.getDist(4);
+        Distance d = new Distance();
+        int dist = d.getTheShortestDistance(graph, 0, 4);
         Assert.assertEquals(-1, dist);
     }
 
@@ -55,8 +69,8 @@ public class GraphTests {
         arr[4] = new Edge(0, 3, 1);
         arr[4] = new Edge(0, 2, 5);
         Graph graph = new Graph(4,arr);
-        Distance d = new Distance(1, graph);
-        int dist = d.getDist(0);
+        Distance d = new Distance();
+        int dist = d.getTheShortestDistance(graph, 1,0);
         Assert.assertEquals(-1, dist);
     }
 
@@ -70,8 +84,8 @@ public class GraphTests {
         arr[4] = new Edge(0, 3, 1);
         arr[4] = new Edge(0, 2, 5);
         Graph graph = new Graph(4,arr);
-        Distance d = new Distance(1, graph);
-        int dist = d.getDist(3);
+        Distance d = new Distance();
+        int dist = d.getTheShortestDistance(graph, 1, 3);
         Assert.assertEquals(7, dist);
     }
 
@@ -82,8 +96,8 @@ public class GraphTests {
             arr[i] = new Edge(i, i + 1, 5);
         arr[4] = new Edge(4, 0, 1);
         Graph graph = new Graph(5, arr);
-        Distance d = new Distance(2, graph);
-        int dist = d.getDist(1);
+        Distance d = new Distance();
+        int dist = d.getTheShortestDistance(graph, 2,1);
         Assert.assertEquals(16, dist);
     }
 
@@ -99,8 +113,8 @@ public class GraphTests {
         arr[8] = new Edge(0, 3, 1);
         arr[9] = new Edge(1, 3, 1);
         Graph graph = new Graph(5, arr);
-        Distance d = new Distance(4, graph);
-        int dist = d.getDist(2);
+        Distance d = new Distance();
+        int dist = d.getTheShortestDistance(graph, 4, 2);
         Assert.assertEquals(5, dist);
     }
 }

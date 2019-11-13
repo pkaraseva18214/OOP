@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ru.nsu.fit.karaseva.graph.GraphTests" tests="7" skipped="0" failures="0" errors="0" timestamp="2019-10-26T16:29:55" hostname="DESKTOP-5CS3CQP" time="0.025">
+<testsuite name="ru.nsu.fit.karaseva.graph.GraphTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2019-11-13T17:19:47" hostname="DESKTOP-5CS3CQP" time="0.022">
   <properties/>
-  <testcase name="test1" classname="ru.nsu.fit.karaseva.graph.GraphTests" time="0.006"/>
-  <testcase name="test2" classname="ru.nsu.fit.karaseva.graph.GraphTests" time="0.007"/>
-  <testcase name="test3" classname="ru.nsu.fit.karaseva.graph.GraphTests" time="0.001"/>
+  <testcase name="test0" classname="ru.nsu.fit.karaseva.graph.GraphTests" time="0.011"/>
+  <testcase name="test1" classname="ru.nsu.fit.karaseva.graph.GraphTests" time="0.0"/>
+  <testcase name="test2" classname="ru.nsu.fit.karaseva.graph.GraphTests" time="0.0"/>
+  <testcase name="test3" classname="ru.nsu.fit.karaseva.graph.GraphTests" time="0.0"/>
   <testcase name="test4" classname="ru.nsu.fit.karaseva.graph.GraphTests" time="0.0"/>
   <testcase name="test5" classname="ru.nsu.fit.karaseva.graph.GraphTests" time="0.0"/>
   <testcase name="test6" classname="ru.nsu.fit.karaseva.graph.GraphTests" time="0.001"/>
