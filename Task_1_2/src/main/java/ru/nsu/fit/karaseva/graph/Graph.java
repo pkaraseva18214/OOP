@@ -32,8 +32,10 @@ public class Graph {
 
     private void addEdge(int v1, int v2, int d) {
         if (v1 < numberVertices || v2 < numberVertices) {
-            vertices[v1].edges.add(v2);
-            vertices[v1].dist.add(d);
+            Neighbor n = new Neighbor();
+            n.edge = v2;
+            n.dist = d;
+            vertices[v1].neighbors.add(n);
         } else {
             System.out.println("Number of vertices more than expected.\n");
         }
@@ -53,7 +55,7 @@ public class Graph {
      * @return number of neighboring vertices
      */
      public int getNumberOfNeighboringVertices(int v) {
-         return vertices[v].edges.size();
+         return vertices[v].neighbors.size();
     }
 
     /**
@@ -67,8 +69,10 @@ public class Graph {
     public int[] getNextVertexAndItsDistance(int v, int numberOfNeighbors) {
         int[] vertex = new int[2];
         if (getNumberOfNeighboringVertices(v) > numberOfNeighbors) {
-            vertex[0] = vertices[v].edges.get(numberOfNeighbors);
-            vertex[1] = vertices[v].dist.get(numberOfNeighbors);
+            Neighbor n = new Neighbor();
+            n = vertices[v].neighbors.get(numberOfNeighbors);
+            vertex[0] = n.edge;
+            vertex[1] = n.dist;
         } else {
             vertex[0] = -1;
         }
