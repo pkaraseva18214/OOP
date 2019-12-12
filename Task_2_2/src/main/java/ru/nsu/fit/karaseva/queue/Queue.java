@@ -125,8 +125,11 @@ public class Queue<I extends Comparable<I>, T> {
        * @throws IndexOutOfBoundsException
        */
       public T next() throws IndexOutOfBoundsException {
+        if (queueSize == 0){
+          throw new IndexOutOfBoundsException("Queue is empty.");
+        }
         if (currentElement == null) {
-          throw new NoSuchElementException("End of list.");
+          throw new NoSuchElementException("End of queue.");
         }
         T result = currentElement.getValue();
         currentElement = currentElement.getNextElement();

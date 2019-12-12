@@ -26,14 +26,9 @@ public class QueueElement<T, I> {
     value = newValue;
     index = indexElement;
     previousElement = previous;
+    nextElement = next;
     if (previous != null) {
       previous.setNextElement(this);
-    }
-    if (next != null) {
-      previousElement = previous;
-      if (previous != null) {
-        previous.nextElement = this;
-      }
     }
   }
 
