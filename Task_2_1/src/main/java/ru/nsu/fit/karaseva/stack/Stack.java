@@ -21,12 +21,8 @@ public class Stack<T> {
    */
   public void push(T element) {
     position++;
-    if (positionStackElement == null) {
-      positionStackElement = new StackElement<T>(element, null);
-      head = positionStackElement;
-    } else {
-      positionStackElement = new StackElement<>(element, positionStackElement);
-    }
+    positionStackElement = new StackElement<>(element, positionStackElement);
+    head = positionStackElement;
   }
 
   /**
@@ -66,6 +62,9 @@ public class Stack<T> {
       }
 
       public T next() throws NoSuchElementException {
+        if (position == 0){
+          throw new EmptyStackException();
+        }
         T result = current.getElement();
         if (!hasNext()) {
           throw new NoSuchElementException("End of the stack.");

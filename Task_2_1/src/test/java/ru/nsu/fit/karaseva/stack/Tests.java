@@ -106,4 +106,16 @@ public class Tests {
     }
   }
 
+  @Test
+  public void test7() {
+    Stack<Integer> stack = new Stack<Integer>();
+    ArrayList<Integer> arr = new ArrayList<Integer>();
+    Iterator<Integer> iter = stack.iterator();
+    Iterator<Integer> iter2 = arr.iterator();
+    try{
+      Integer el = iter.next();
+      Integer el2 = iter.next();
+    } catch (EmptyStackException e){
+    }
+  }
 }
