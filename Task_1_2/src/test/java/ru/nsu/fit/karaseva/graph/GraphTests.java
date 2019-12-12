@@ -1,5 +1,6 @@
 package ru.nsu.fit.karaseva.graph;
 
+import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,10 +16,13 @@ public class GraphTests {
 
   @Test
   public void test0() {
-    Edge[] arr = new Edge[3];
-    arr[0] = new Edge(0, 1, 1);
-    arr[1] = new Edge(1, 2, 1);
-    arr[2] = new Edge(2, 3, 5);
+    Edge edge1= new Edge(0, 1, 1);
+    Edge edge2 = new Edge(1, 2, 1);
+    Edge edge3 = new Edge(2, 3, 5);
+    ArrayList<Edge> arr = new ArrayList<>();
+    arr.add(edge1);
+    arr.add(edge2);
+    arr.add(edge3);
     Graph graph = new Graph(4, arr);
     Distance distance = new Distance();
     int d = distance.getTheShortestDistance(graph, 1, 3);
@@ -27,21 +31,35 @@ public class GraphTests {
 
   @Test
   public void test2() {
-    Edge[] arr = new Edge[14];
-    arr[0] = new Edge(0, 1, 1);
-    arr[1] = new Edge(1, 2, 1);
-    arr[2] = new Edge(2, 9, 1);
-    arr[3] = new Edge(2, 7, 1);
-    arr[4] = new Edge(0, 10, 1);
-    arr[5] = new Edge(10, 3, 1);
-    arr[6] = new Edge(1, 8, 1);
-    arr[7] = new Edge(9, 7, 1);
-    arr[8] = new Edge(8, 3, 1);
-    arr[9] = new Edge(4, 3, 1);
-    arr[10] = new Edge(4, 6, 1);
-    arr[11] = new Edge(7, 5, 1);
-    arr[12] = new Edge(8, 6, 1);
-    arr[13] = new Edge(3, 6, 1);
+    ArrayList<Edge> arr = new ArrayList<>();
+    Edge e1 = new Edge(0, 1, 1);
+    Edge e2 = new Edge(1, 2, 1);
+    Edge e3 = new Edge(2, 9, 1);
+    Edge e4 = new Edge(2, 7, 1);
+    Edge e5 = new Edge(0, 10, 1);
+    Edge e6 = new Edge(10, 3, 1);
+    Edge e7 = new Edge(1, 8, 1);
+    Edge e8 = new Edge(9, 7, 1);
+    Edge e9 = new Edge(8, 3, 1);
+    Edge e10 = new Edge(4, 3, 1);
+    Edge e11 = new Edge(4, 6, 1);
+    Edge e12 = new Edge(7, 5, 1);
+    Edge e13 = new Edge(8, 6, 1);
+    Edge e14 = new Edge(3, 6, 1);
+    arr.add(e1);
+    arr.add(e2);
+    arr.add(e3);
+    arr.add(e4);
+    arr.add(e5);
+    arr.add(e6);
+    arr.add(e7);
+    arr.add(e8);
+    arr.add(e9);
+    arr.add(e10);
+    arr.add(e11);
+    arr.add(e12);
+    arr.add(e13);
+    arr.add(e14);
     Graph graph = new Graph(11, arr);
     Distance distance = new Distance();
     int dist = distance.getTheShortestDistance(graph, 0, 3);
@@ -50,9 +68,11 @@ public class GraphTests {
 
   @Test
   public void test3() {
-    Edge[] arr = new Edge[2];
-    arr[0] = new Edge(0, 2, 3);
-    arr[1] = new Edge(4, 2, 3);
+    ArrayList<Edge> arr = new ArrayList<>();
+    Edge e1 = new Edge(0, 2, 3);
+    Edge e2 = new Edge(4, 2, 3);
+    arr.add(e1);
+    arr.add(e2);
     Graph graph = new Graph(5, arr);
     Distance d = new Distance();
     int dist = d.getTheShortestDistance(graph, 0, 4);
@@ -61,13 +81,19 @@ public class GraphTests {
 
   @Test
   public void test4() {
-    Edge[] arr = new Edge[6];
-    arr[0] = new Edge(0, 1, 2);
-    arr[1] = new Edge(1, 2, 3);
-    arr[2] = new Edge(2, 3, 4);
-    arr[3] = new Edge(3, 1, 6);
-    arr[4] = new Edge(0, 3, 1);
-    arr[4] = new Edge(0, 2, 5);
+    ArrayList<Edge> arr = new ArrayList<>();
+    Edge e1 = new Edge(0, 1, 2);
+    Edge e2 = new Edge(1, 2, 3);
+    Edge e3 = new Edge(2, 3, 4);
+    Edge e4 = new Edge(3, 1, 6);
+    Edge e5 = new Edge(0, 3, 1);
+    Edge e6 = new Edge(0, 2, 5);
+    arr.add(e1);
+    arr.add(e2);
+    arr.add(e3);
+    arr.add(e4);
+    arr.add(e5);
+    arr.add(e6);
     Graph graph = new Graph(4, arr);
     Distance d = new Distance();
     int dist = d.getTheShortestDistance(graph, 1, 0);
@@ -76,43 +102,23 @@ public class GraphTests {
 
   @Test
   public void test5() {
-    Edge[] arr = new Edge[6];
-    arr[0] = new Edge(0, 1, 2);
-    arr[1] = new Edge(1, 2, 3);
-    arr[2] = new Edge(2, 3, 4);
-    arr[3] = new Edge(3, 1, 6);
-    arr[4] = new Edge(0, 3, 1);
-    arr[4] = new Edge(0, 2, 5);
+    ArrayList<Edge> arr = new ArrayList<>();
+    Edge e1 = new Edge(0, 1, 2);
+    Edge e2 = new Edge(1, 2, 3);
+    Edge e3 = new Edge(2, 3, 4);
+    Edge e4 = new Edge(3, 1, 6);
+    Edge e5 = new Edge(0, 3, 1);
+    Edge e6 = new Edge(0, 2, 5);
+    arr.add(e1);
+    arr.add(e2);
+    arr.add(e3);;
+    arr.add(e4);
+    arr.add(e5);
+    arr.add(e6);
     Graph graph = new Graph(4, arr);
     Distance d = new Distance();
     int dist = d.getTheShortestDistance(graph, 1, 3);
     Assert.assertEquals(7, dist);
   }
 
-  @Test
-  public void test6() {
-    Edge[] arr = new Edge[5];
-    for (int i = 0; i < 4; ++i) arr[i] = new Edge(i, i + 1, 5);
-    arr[4] = new Edge(4, 0, 1);
-    Graph graph = new Graph(5, arr);
-    Distance d = new Distance();
-    int dist = d.getTheShortestDistance(graph, 2, 1);
-    Assert.assertEquals(16, dist);
-  }
-
-  @Test
-  public void test7() {
-    Edge[] arr = new Edge[10];
-    for (int i = 0; i < 4; ++i) arr[i] = new Edge(i, i + 1, 2);
-    arr[4] = new Edge(4, 0, 2);
-    arr[5] = new Edge(2, 0, 1);
-    arr[6] = new Edge(2, 4, 3);
-    arr[7] = new Edge(4, 1, 3);
-    arr[8] = new Edge(0, 3, 1);
-    arr[9] = new Edge(1, 3, 1);
-    Graph graph = new Graph(5, arr);
-    Distance d = new Distance();
-    int dist = d.getTheShortestDistance(graph, 4, 2);
-    Assert.assertEquals(5, dist);
-  }
 }

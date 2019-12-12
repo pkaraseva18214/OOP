@@ -1,5 +1,7 @@
 package ru.nsu.fit.karaseva.graph;
 
+import java.util.ArrayList;
+
 /**
  * A class that implements the creation of a graph and some methods of working with it.
  */
@@ -16,28 +18,26 @@ public class Graph {
    * @param n   number of vertices
    * @param arr array of edges
    */
-  public Graph(int n, Edge[] arr) {
+  public Graph(int n, ArrayList<Edge> arr) {
     numberVertices = n;
     vertices = new NeighborVertices[n];
     for (int i = 0; i < n; i++) {
       vertices[i] = new NeighborVertices();
     }
     if (arr != null) {
-      for (int i = 0; i < arr.length; i++) {
-        if (arr[i] == null) {
+      for (int i = 0; i < arr.size(); i++) {
+        if (arr.get(i) == null) {
           continue;
         }
-        addEdge(arr[i].getVertexFrom(), arr[i].getVertexTo(), arr[i].getDistance());
+        addEdge(arr.get(i).getVertexFrom(), arr.get(i).getVertexTo(), arr.get(i).getDistance());
       }
     }
   }
 
   private void addEdge(int v1, int v2, int d) {
     if (v1 < numberVertices || v2 < numberVertices) {
-      NeighborVertices n = new NeighborVertices();
-      n.setNeighboringVertex(v2);
-      n.setDistanceToNeighboringVertex(d);
-      vertices[v1].neighbors.add(n);
+      Edge neighborEdge = new Edge(v1, v2, d);
+      vertices[v1].neighbors.add(neighborEdge);
     } else {
       System.out.println("Number of vertices more than expected.\n");
     }
@@ -75,8 +75,8 @@ public class Graph {
   public int[] getNextVertexAndItsDistance(int v, int numberOfNeighbors) {
     int[] vertex = new int[2];
     if (getNumberOfNeighboringVertices(v) > numberOfNeighbors) {
-      vertex[0] = vertices[v].neighbors.get(numberOfNeighbors).getNeighboringEdge();
-      vertex[1] = vertices[v].neighbors.get(numberOfNeighbors).getDistanceToNeighboringVertex();
+      vertex[0] = vertices[v].neighbors.get(numberOfNeighbors).getVertexTo();
+      vertex[1] = vertices[v].neighbors.get(numberOfNeighbors).getDistance();
     } else {
       vertex[0] = -1;
     }
