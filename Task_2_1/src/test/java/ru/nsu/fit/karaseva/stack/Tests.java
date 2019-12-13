@@ -1,6 +1,7 @@
 package ru.nsu.fit.karaseva.stack;
 
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.Iterator;
 
 import org.junit.Assert;
@@ -112,10 +113,10 @@ public class Tests {
     ArrayList<Integer> arr = new ArrayList<Integer>();
     Iterator<Integer> iter = stack.iterator();
     Iterator<Integer> iter2 = arr.iterator();
-    try{
+    try {
       Integer el = iter.next();
       Integer el2 = iter.next();
-    } catch (EmptyStackException e){
+    } catch (EmptyStackException e) {
     }
   }
 }

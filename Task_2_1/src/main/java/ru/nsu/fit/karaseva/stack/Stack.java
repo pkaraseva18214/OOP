@@ -1,5 +1,6 @@
 package ru.nsu.fit.karaseva.stack;
 
+import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -9,7 +10,6 @@ import java.util.NoSuchElementException;
  * @param <T> type of the elements.
  */
 public class Stack<T> {
-
   private StackElement<T> positionStackElement = null;
   private StackElement<T> head = null;
   private int position = 0;
@@ -62,7 +62,7 @@ public class Stack<T> {
       }
 
       public T next() throws NoSuchElementException {
-        if (position == 0){
+        if (position == 0) {
           throw new EmptyStackException();
         }
         T result = current.getElement();
@@ -92,5 +92,4 @@ public class Stack<T> {
   public boolean isEmpty() {
     return position == 0;
   }
-
 }

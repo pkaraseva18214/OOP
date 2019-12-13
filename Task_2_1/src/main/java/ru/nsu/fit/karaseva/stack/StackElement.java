@@ -15,7 +15,7 @@ class StackElement<T> {
    * Method that creates new stack element.
    *
    * @param newElement new stack element.
-   * @param previous   previous element in the stack.
+   * @param previous previous element in the stack.
    */
   public StackElement(T newElement, StackElement<T> previous) {
     element = newElement;
