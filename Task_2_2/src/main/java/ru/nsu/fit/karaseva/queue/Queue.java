@@ -32,28 +32,8 @@ public class Queue<I extends Comparable<I>, T> {
       queueSize++;
       return;
     }
-    if (index.compareTo(beginningOfQueue.getIndex()) <= 0) {
-      beginningOfQueue = new QueueElement<>(index, value, null, beginningOfQueue);
-      ++queueSize;
-      return;
-    }
-    if (index.compareTo(endOfQueue.getIndex()) > 0) {
-      endOfQueue = new QueueElement<>(index, value, endOfQueue, null);
-      ++queueSize;
-      return;
-    }
-    QueueElement<T, I> currentElement = beginningOfQueue;
-    for (int i = 0; i < queueSize - 1; ++i) {
-      I currentIndex = currentElement.getIndex();
-      I nextIndex = currentElement.getNextElement().getIndex();
-      if (currentIndex.compareTo(index) <= 0 && nextIndex.compareTo(index) >= 0) {
-        QueueElement<T, I> nextQueueElement = currentElement.getNextElement();
-        new QueueElement<>(index, value, currentElement, nextQueueElement);
-        ++queueSize;
-        break;
-      }
-      currentElement = currentElement.getNextElement();
-    }
+    endOfQueue = new QueueElement<>(index, value, endOfQueue, null);
+    ++queueSize;
   }
 
   /**
@@ -125,7 +105,7 @@ public class Queue<I extends Comparable<I>, T> {
        * @throws IndexOutOfBoundsException
        */
       public T next() throws IndexOutOfBoundsException {
-        if (queueSize == 0){
+        if (queueSize == 0) {
           throw new IndexOutOfBoundsException("Queue is empty.");
         }
         if (currentElement == null) {

@@ -23,13 +23,15 @@ public class QueueElement<T, I> {
    */
   public QueueElement(
       I indexElement, T newValue, QueueElement<T, I> previous, QueueElement<T, I> next) {
-    value = newValue;
-    index = indexElement;
     previousElement = previous;
-    nextElement = next;
     if (previous != null) {
       previous.setNextElement(this);
     }
+    if (next != null) {
+      next.setPreviousElement(this);
+    }
+    value = newValue;
+    index = indexElement;
   }
 
   /**
