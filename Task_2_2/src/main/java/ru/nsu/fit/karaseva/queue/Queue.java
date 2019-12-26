@@ -32,8 +32,28 @@ public class Queue<I extends Comparable<I>, T> {
       queueSize++;
       return;
     }
-    endOfQueue = new QueueElement<>(index, value, endOfQueue, null);
-    ++queueSize;
+    if (index.compareTo(beginningOfQueue.getIndex()) <= 0) {
+      beginningOfQueue = new QueueElement<>(index, value, null, beginningOfQueue);
+      ++queueSize;
+      return;
+    }
+    if (index.compareTo(endOfQueue.getIndex()) > 0) {
+      endOfQueue = new QueueElement<>(index, value, endOfQueue, null);
+      ++queueSize;
+      return;
+    }
+    QueueElement<T, I> currentElement = beginningOfQueue;
+    for (int i = 0; i < queueSize - 1; ++i) {
+      I currentIndex = currentElement.getIndex();
+      I nextIndex = currentElement.getNextElement().getIndex();
+      if (currentIndex.compareTo(index) <= 0 && nextIndex.compareTo(index) >= 0) {
+        QueueElement<T, I> nextQueueElement = currentElement.getNextElement();
+        new QueueElement<>(index, value, currentElement, nextQueueElement);
+        ++queueSize;
+        break;
+      }
+      currentElement = currentElement.getNextElement();
+    }
   }
 
   /**
@@ -121,13 +141,13 @@ public class Queue<I extends Comparable<I>, T> {
   /**
    * Check if queue is empty.
    *
-   * @return 1 - if empty, 0 - not empty.
+   * @return true - if empty, false - not empty.
    */
-  public int isEmpty() {
+  public boolean isEmpty() {
     if (queueSize <= 0) {
-      return 1;
+      return true;
     }
-    return 0;
+    return false;
   }
 
   /**
