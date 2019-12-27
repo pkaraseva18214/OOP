@@ -51,15 +51,15 @@ public class QueueTests {
   public void test4() {
     Queue<Integer, Integer> queue = new Queue<>();
     queue.add(147, null);
-    Assert.assertEquals(queue.isEmpty(), 0);
+    Assert.assertEquals(queue.isEmpty(), false);
     Integer obj = queue.extractMax();
-    Assert.assertEquals(queue.isEmpty(), 1);
+    Assert.assertEquals(queue.isEmpty(), true);
     try {
       queue.add(null, 1);
       Assert.fail();
     } catch (NullPointerException ignored) {
     }
-    Assert.assertEquals(queue.isEmpty(), 1);
+    Assert.assertEquals(queue.isEmpty(), true);
   }
 
   @Test
