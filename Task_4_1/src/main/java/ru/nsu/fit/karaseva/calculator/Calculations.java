@@ -1,115 +1,44 @@
 package ru.nsu.fit.karaseva.calculator;
 
-import java.util.*;
-
 /** Class that implement calculations for calculator. */
 public class Calculations extends Calculator {
+  private Double[] args;
+  private Double res;
 
   /**
-   * Method for calculating input expression.
-   *
-   * @param exp expression that needed to be calculated.
-   * @return result of calculation.
+   * Calculate expression.
+   * @param exp input expression.
+   * @return result of calculations, otherwise (if something wrong) returns null.
    */
   public Double Calculations(String exp) {
-    prepareToCalculate(exp);
-    if (!operations.empty()) {
-      while (!operations.empty()) {
-        String operation = getOperation();
-        if (operation.length() == 1 || operation.equals("pow")) {
-          try {
-            Double n1 = getNumbers();
-            Double n2 = getNumbers();
-            if (n1 != null || n2 != null) {
-              calculateValue(n1, n2, operation);
-            }
-          } catch (NoSuchElementException ex) {
-            System.out.println("No numbers were entered.");
-          }
-        } else {
-          try {
-            Double n = getNumbers();
-            if (n != null) calculateValue2(n, operation);
-          } catch (NoSuchElementException ex) {
-            System.out.println("No numbers were entered.");
-          }
-        }
-      }
-    } else {
-      throw new NoSuchElementException("No arithmetic operations entered.");
+    if (!prepareToCalculate(exp)){
+      return null;
     }
-    Double res = numbers.remove();
-    return res;
-  }
-
-  private void calculateValue(Double n1, Double n2, String op) {
-    try {
-      switch (op) {
-        case ("+"):
-          {
-            numbers.addFirst(n1 + n2);
-            break;
-          }
-        case ("-"):
-          {
-            numbers.addFirst(n1 - n2);
-            break;
-          }
-        case ("*"):
-          {
-            numbers.addFirst(n1 * n2);
-            break;
-          }
-        case ("/"):
-          {
-            numbers.addFirst(n1 / n2);
-            break;
-          }
-        case ("pow"):
-          {
-            numbers.addFirst(Math.pow(n1, n2));
-            break;
-          }
-      }
-    } catch (IllegalArgumentException ex) {
-      System.out.println("Invalid arithmetical operation entered.");
+    if (operations.empty() || numbers.isEmpty()) {
+      return null;
     }
-  }
-
-  private void calculateValue2(Double n, String op) {
-    try {
-      switch (op) {
-        case ("sin"):
-          {
-            numbers.addFirst(Math.sin(n));
-            break;
-          }
-        case ("cos"):
-          {
-            numbers.addFirst(Math.cos(n));
-            break;
-          }
-        case ("log"):
-          {
-            numbers.addFirst(Math.log(n));
-            break;
-          }
-        case ("sqrt"):
-          {
-            numbers.addFirst(Math.sqrt(n));
-            break;
-          }
+    args = new Double[2];
+    while (!operations.empty()) {
+      String operation = getOperation();
+      Factory op = new Factory();
+      if (!op.isSupported(operation)) {
+        return null;
       }
-    } catch (IllegalArgumentException ex) {
-      System.out.println("Invalid arithmetical operation entered.");
+      Operations usedOperation = op.getOperation(operation);
+      for (int i = 0; i < usedOperation.getNumberOfArguments(); i++) {
+        args[i] = getNumbers();
+      }
+      numbers.addFirst(usedOperation.calculateOperation(args[0], args[1]));
     }
+    return res = numbers.remove();
   }
 
   private Double getNumbers() {
-    return numbers.poll();
+    return numbers.removeFirst();
   }
 
   private String getOperation() {
     return operations.pop();
   }
 }
+

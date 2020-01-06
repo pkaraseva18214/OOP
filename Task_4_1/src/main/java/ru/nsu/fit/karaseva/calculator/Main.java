@@ -11,6 +11,8 @@ public class Main {
     String exp = console.nextLine();
     Calculator calc = new Calculator();
     Double res = calc.calculator(exp);
-    System.out.print(" = " + res);
+    if (res != null){
+      System.out.print(" = " + res);
+    } else System.out.println("Something wrong with input.");
   }
 }

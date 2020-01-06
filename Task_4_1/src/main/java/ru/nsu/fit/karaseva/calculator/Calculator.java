@@ -4,26 +4,27 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.Stack;
-import java.lang.NumberFormatException;
 
 /** Class that implements calculator. */
 public class Calculator {
+  private boolean correctness = true;
   private String str;
   Deque<Double> numbers = new ArrayDeque<>();
   Stack<String> operations = new Stack<>();
 
-  void prepareToCalculate(String in) {
+  boolean prepareToCalculate(String in) {
     Arrays.asList(in.split(" ")).stream()
         .forEach(
             number -> {
               if (number.charAt(0) >= 48 && number.charAt(0) <= 57) {
                 try {
                   numbers.add(Double.parseDouble(number));
-                } catch (NumberFormatException ex) {
-                  System.out.println("You entered wrong number.");
+                } catch (NumberFormatException ignore) {
+                  correctness = false;
                 }
               } else operations.push(number);
             });
+    return correctness;
   }
 
   /**

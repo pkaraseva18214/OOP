@@ -1,5 +1,6 @@
 package ru.nsu.fit.karaseva.calculator;
 
+import java.util.Stack;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -51,5 +52,13 @@ public class CalculatorTests {
     String str = "/ log - / pow 5 5 10 300 10";
     Double res = n.calculator(str);
     Assert.assertEquals(0.2525, res, 0.001);
+  }
+
+  @Test
+  public void test7() {
+    Calculator n = new Calculator();
+    String str = "+ 1a 2";
+    Double res = n.calculator(str);
+    Assert.assertNull(res);
   }
 }
