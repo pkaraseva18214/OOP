@@ -10,7 +10,8 @@ public class Main {
     System.out.println("Please, enter your expression: ");
     String exp = console.nextLine();
     Calculator calc = new Calculator();
-    Double res = calc.calculator(exp);
+    OperationFactory factory = new Factory();
+    Double res = calc.calculator(exp, factory);
     if (res != null){
       System.out.print(" = " + res);
     } else System.out.println("Something wrong with input.");

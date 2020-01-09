@@ -1,44 +1,52 @@
 package ru.nsu.fit.karaseva.calculator;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Stack;
+
 /** Class that implement calculations for calculator. */
-public class Calculations extends Calculator {
+public class Calculations {
   private Double[] args;
   private Double res;
+  private Calculator calc = new Calculator();
+  private OperationFactory f;
 
   /**
    * Calculate expression.
    * @param exp input expression.
    * @return result of calculations, otherwise (if something wrong) returns null.
    */
-  public Double Calculations(String exp) {
-    if (!prepareToCalculate(exp)){
+  public Double calculations(String exp, OperationFactory factory) {
+    this.f = factory;
+    if (!calc.prepareToCalculate(exp)){
       return null;
     }
-    if (operations.empty() || numbers.isEmpty()) {
+    if (calc.operations.empty() || calc.numbers.isEmpty()) {
       return null;
     }
     args = new Double[2];
-    while (!operations.empty()) {
+    while (!calc.operations.empty()) {
       String operation = getOperation();
-      Factory op = new Factory();
-      if (!op.isSupported(operation)) {
+      //Factory op = new Factory();
+      if (!f.isSupported(operation)) {
         return null;
       }
-      Operations usedOperation = op.getOperation(operation);
+      Operations usedOperation = f.getOperation(operation);
       for (int i = 0; i < usedOperation.getNumberOfArguments(); i++) {
         args[i] = getNumbers();
       }
-      numbers.addFirst(usedOperation.calculateOperation(args[0], args[1]));
+      calc.numbers.addFirst(usedOperation.calculateOperation(args[0], args[1]));
     }
-    return res = numbers.remove();
+    return res = calc.numbers.remove();
   }
 
   private Double getNumbers() {
-    return numbers.removeFirst();
+    return calc.numbers.removeFirst();
   }
 
   private String getOperation() {
-    return operations.pop();
+    return calc.operations.pop();
   }
+
 }
 

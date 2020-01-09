@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.Stack;
+import org.graalvm.compiler.nodes.calc.IntegerDivRemNode.Op;
 
 /** Class that implements calculator. */
 public class Calculator {
@@ -33,10 +34,10 @@ public class Calculator {
    * @param exp input expression.
    * @return result of calculations.
    */
-  public Double calculator(String exp) {
+  public Double calculator(String exp, OperationFactory factory) {
     str = exp;
     Calculations calc = new Calculations();
-    Double res = calc.Calculations(exp);
+    Double res = calc.calculations(exp, factory);
     return res;
   }
 }
