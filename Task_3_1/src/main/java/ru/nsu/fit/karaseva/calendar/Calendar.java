@@ -1,5 +1,7 @@
 package ru.nsu.fit.karaseva.calendar;
 
+import sun.nio.cs.ext.MacHebrew;
+
 public class Calendar {
   private Date today;
   private int todayDay;
@@ -7,38 +9,21 @@ public class Calendar {
   private int todayYear;
 
   public static final String[] MONTH = {
-    "January", "February",
-    "March", "April",
-    "May", "June",
-    "July", "August",
-    "September", "October",
-    "November", "December"
+      "January", "February",
+      "March", "April",
+      "May", "June",
+      "July", "August",
+      "September", "October",
+      "November", "December"
   };
 
   public static final String[] WEEKDAY = {
-    "Monday", "Tuesday",
-    "Wednesday", "Thursday",
-    "Friday", "Saturday",
-    "Sunday"
+      "Monday", "Tuesday",
+      "Wednesday", "Thursday",
+      "Friday", "Saturday",
+      "Sunday"
   };
 
-  /**
-   * Calendar constructor with input days, month, year.
-   *
-   * @param day number of the day in month.
-   * @param month number of the month.
-   * @param year number of the year.
-   * @throws IllegalArgumentException if the input arguments are incorrect.
-   */
-  public Calendar(int day, int month, int year) throws IllegalArgumentException {
-    if (!Date.isCorrect(day, month, year)) {
-      throw new IllegalArgumentException();
-    }
-    today = new Date(day, month, year);
-    todayDay = today.getDay();
-    todayYear = today.getYear();
-    todayMonth = today.getMonth();
-  }
   /**
    * Calendar constructor with input Date date.
    *
@@ -48,6 +33,9 @@ public class Calendar {
   public Calendar(Date date) throws NullPointerException {
     if (date == null) {
       throw new NullPointerException();
+    }
+    if (!Date.isCorrect(date.getDay(), date.getMonth(), date.getYear())){
+      throw new IllegalArgumentException();
     }
     this.today = date;
     todayDay = date.getDay();
@@ -73,7 +61,8 @@ public class Calendar {
    */
   public Date addDays(int days) {
     long currentDays = today.getDaysFromBeginningOfTheEra() + days;
-    return new Date(currentDays);
+    Date newDate = convertIntoDate(currentDays);
+    return new Date(newDate.getDay(), newDate.getMonth()+1, newDate.getYear()+1);
   }
 
   /**
@@ -227,5 +216,77 @@ public class Calendar {
       throw new NullPointerException();
     }
     return Math.abs(date1.getDaysFromBeginningOfTheEra() - date2.getDaysFromBeginningOfTheEra());
+  }
+
+  /**
+   * Method that converts number of days into date.
+   * @param days number of the days
+   * @return date.
+   */
+  public Date convertIntoDate(long days) {
+    final int NUMBER_OF_DAYS_IN_CENTURY = 36524;
+    int newYear = 0;
+    boolean flag = false;
+    int newMonth = 0;
+    int century = (int) days / NUMBER_OF_DAYS_IN_CENTURY;
+    days = days - century * NUMBER_OF_DAYS_IN_CENTURY - century / 4;
+    while (newYear == 0 || (newYear % 4 == 0 && days > 366) || (newYear % 4 != 0 && days > 365)) {
+      newYear++;
+      if (newYear % 4 != 0) {
+        days -= 365;
+      } else {
+        days -= 366;
+      }
+    }
+    for (int i = 0; !flag; ++i) {
+      switch (i+1) {
+        case 1:
+        case 3:
+        case 5:
+        case 7:
+        case 8:
+        case 10:
+        case 12:
+          if (days > 31) {
+            days -= 31;
+          } else {
+            flag = true;
+            newMonth = i;
+          }
+          break;
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+          if (days > 30) {
+            days -= 30;
+          } else {
+            flag = true;
+            newMonth = i;
+          }
+          break;
+        case 2:
+          if (newYear % 4 == 0 && newYear != 0) {
+            if (days > 29) {
+              days -= 29;
+            } else {
+              flag = true;
+              newMonth = i;
+            }
+          } else {
+            if (days > 28) {
+              days -= 28;
+            } else {
+              flag = true;
+              newMonth = i;
+            }
+          }
+          break;
+      }
+    }
+    int day = (int) days;
+    int month = newMonth;
+    int year = newYear + 100 * century;
+    return new Date(day, month, year);
   }
 }

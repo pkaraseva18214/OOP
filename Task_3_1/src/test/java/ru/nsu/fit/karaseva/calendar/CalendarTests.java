@@ -8,8 +8,9 @@ public class CalendarTests {
 
   @Test
   public void test1() {
+    Date d = new Date(1, 1, 2020);
     Calendar c = new Calendar(now);
-    Calendar c1 = new Calendar(1, 1, 2020);
+    Calendar c1 = new Calendar(d);
     Assert.assertEquals(0, c.daysBetweenDates(now, c1.getToday()));
   }
 
@@ -44,21 +45,15 @@ public class CalendarTests {
   @Test
   public void test5() {
     try {
-      Calendar c = new Calendar(1, 13, 2021);
+      Date d1 = new Date(1, 13, 2021);
       Assert.fail();
     } catch (IllegalArgumentException ignored) {
     }
     ;
     try {
-      Calendar c = new Calendar(0, 1, 20);
+      Calendar c = new Calendar(null);
       Assert.fail();
-    } catch (IllegalArgumentException ignored) {
-    }
-    ;
-    try {
-      Calendar c = new Calendar(27, 1, 0);
-      Assert.fail();
-    } catch (IllegalArgumentException ignored) {
+    } catch (NullPointerException ignored) {
     }
     ;
   }
@@ -80,28 +75,6 @@ public class CalendarTests {
 
   @Test
   public void test7() {
-    Date now = new Date(1, 1, 2020);
-    Date isNow = new Date(now.getDaysFromBeginningOfTheEra());
-    Assert.assertEquals(
-        isNow.getDaysFromBeginningOfTheEra(),
-        Date.countDays(isNow.getDay(), isNow.getMonth(), isNow.getYear()));
-    Date past = new Date(1);
-    Assert.assertEquals(1, Date.countDays(past.getDay(), past.getMonth(), past.getYear()));
-  }
-
-  @Test
-  public void test8() {
-    Date checked = new Date(369512);
-    Date before = new Date(checked.getDay() - 1, checked.getMonth(), checked.getYear());
-    Date after = new Date(369513);
-    Date equals = new Date(369512);
-    Assert.assertTrue(checked.isAfter(before));
-    Assert.assertTrue(checked.isBefore(after));
-    Assert.assertTrue(checked.isEquals(equals));
-  }
-
-  @Test
-  public void test9() {
     Date check = new Date(23, 5, 2018);
     try {
       check.isAfter(null);
@@ -115,5 +88,15 @@ public class CalendarTests {
     } catch (NullPointerException ignored) {
     }
     ;
+  }
+
+  @Test
+  public void test8(){
+    Date d1 = new Date(9, 5, 2020);
+    Date d2 = new Date(9, 5, 1945);
+    Calendar c = new Calendar(d1);
+    long days = Calendar.daysBetweenDates(d1, d2);
+    Date between = c.convertIntoDate(days);
+    Assert.assertEquals(between.dateToString(between), "1 0 75");
   }
 }

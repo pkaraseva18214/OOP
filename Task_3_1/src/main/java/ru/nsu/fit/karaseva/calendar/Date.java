@@ -25,77 +25,6 @@ public class Date {
     numberOfDays = countDays(newDay, newMonth, newYear);
   }
 
-  /**
-   * Date class constructor using number of days from the beginning of the era.
-   *
-   * @param days - number of the days from the beginning of the era.
-   */
-  public Date(long days) {
-    final int NUMBER_OF_DAYS_IN_CENTURY = 36524;
-    int newYear = 1;
-    boolean flag = false;
-    int newMonth = 1;
-    numberOfDays = days;
-    int century = (int) days / NUMBER_OF_DAYS_IN_CENTURY;
-    days = days - century * NUMBER_OF_DAYS_IN_CENTURY + century / 4;
-    while ((newYear % 4 == 0 && days > 366) || (newYear % 4 != 0 && days > 365)) {
-      newYear++;
-      if (newYear % 4 == 0) {
-        days -= 365;
-      } else {
-        days -= 366;
-      }
-    }
-    for (int i = 1; !flag; ++i) {
-      switch (i) {
-        case 1:
-        case 3:
-        case 5:
-        case 7:
-        case 8:
-        case 10:
-        case 12:
-          if (days > 31) {
-            days -= 31;
-          } else {
-            flag = true;
-            newMonth = i;
-          }
-          break;
-        case 4:
-        case 6:
-        case 9:
-        case 11:
-          if (days > 30) {
-            days -= 30;
-          } else {
-            flag = true;
-            newMonth = i;
-          }
-          break;
-        case 2:
-          if (newYear % 4 == 0 && newYear != 0) {
-            if (days > 29) {
-              days -= 29;
-            } else {
-              flag = true;
-              newMonth = i;
-            }
-          } else {
-            if (days > 28) {
-              days -= 28;
-            } else {
-              flag = true;
-              newMonth = i;
-            }
-          }
-          break;
-      }
-      day = (int) days;
-      month = newMonth;
-      year = newYear + 100 * century;
-    }
-  }
 
   /** @return date in format "dd MM YY weekday". */
   public String toString() {
@@ -146,7 +75,7 @@ public class Date {
    * @return true - if the data is correct, otherwise - false.
    */
   public static boolean isCorrect(int newDay, int newMonth, int newYear) {
-    if (newDay < 1 || newMonth > 12 || newMonth < 1 || newYear <= 0) {
+    if (newDay < 0 || newMonth > 12 || newMonth < 0 || newYear < 0) {
       return false;
     }
     switch (newMonth) {
@@ -286,5 +215,10 @@ public class Date {
       throw new NullPointerException();
     }
     return newDate.numberOfDays == this.numberOfDays;
+  }
+
+  String dateToString(Date date) {
+    String str = day + " " + month + " " + year;
+    return str;
   }
 }
