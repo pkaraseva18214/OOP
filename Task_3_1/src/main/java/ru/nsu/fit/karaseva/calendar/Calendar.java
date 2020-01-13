@@ -9,19 +9,19 @@ public class Calendar {
   private int todayYear;
 
   public static final String[] MONTH = {
-      "January", "February",
-      "March", "April",
-      "May", "June",
-      "July", "August",
-      "September", "October",
-      "November", "December"
+    "January", "February",
+    "March", "April",
+    "May", "June",
+    "July", "August",
+    "September", "October",
+    "November", "December"
   };
 
   public static final String[] WEEKDAY = {
-      "Monday", "Tuesday",
-      "Wednesday", "Thursday",
-      "Friday", "Saturday",
-      "Sunday"
+    "Monday", "Tuesday",
+    "Wednesday", "Thursday",
+    "Friday", "Saturday",
+    "Sunday"
   };
 
   /**

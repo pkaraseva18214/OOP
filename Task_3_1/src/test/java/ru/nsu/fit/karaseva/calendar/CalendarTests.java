@@ -94,9 +94,7 @@ public class CalendarTests {
   public void test8(){
     Date d1 = new Date(9, 5, 2020);
     Date d2 = new Date(9, 5, 1945);
-    Calendar c = new Calendar(d1);
-    long days = Calendar.daysBetweenDates(d1, d2);
-    Date between = c.convertIntoDate(days);
-    Assert.assertEquals(between.dateToString(between), "1 0 75");
+    DateInterval interval = new DateInterval(d1, d2);
+    Assert.assertEquals(interval.toString(), "1 0 75");
   }
 }

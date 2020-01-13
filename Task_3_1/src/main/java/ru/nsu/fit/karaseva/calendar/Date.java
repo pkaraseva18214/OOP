@@ -75,7 +75,7 @@ public class Date {
    * @return true - if the data is correct, otherwise - false.
    */
   public static boolean isCorrect(int newDay, int newMonth, int newYear) {
-    if (newDay < 0 || newMonth > 12 || newMonth < 0 || newYear < 0) {
+    if (newDay < 1 || newMonth > 12 || newMonth < 1 || newYear < 1) {
       return false;
     }
     switch (newMonth) {
@@ -217,8 +217,4 @@ public class Date {
     return newDate.numberOfDays == this.numberOfDays;
   }
 
-  String dateToString(Date date) {
-    String str = day + " " + month + " " + year;
-    return str;
-  }
 }
