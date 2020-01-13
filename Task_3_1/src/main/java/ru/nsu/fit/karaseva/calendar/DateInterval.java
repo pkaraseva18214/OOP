@@ -25,12 +25,7 @@ public class DateInterval {
     return str;
   }
 
-  /**
-   * Method that counts days between two dates and return them represented
-   * as new date.
-   * @return date - interval between to dates.
-   */
-  public static long countDays() {
+  private static long countDays() {
     long days = Calendar.daysBetweenDates(date1, date2);
     return days;
   }
