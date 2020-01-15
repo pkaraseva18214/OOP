@@ -30,7 +30,7 @@ class ForkJoinPrime extends RecursiveTask<Boolean> {
     ForkJoinPrime second = new ForkJoinPrime(numbers, start + length / 2, end);
     boolean secondResult = second.compute();
     boolean firstResult = first.join();
-    return firstResult && secondResult;
+    return firstResult || secondResult;
   }
 
   private boolean computeSequentially() {
