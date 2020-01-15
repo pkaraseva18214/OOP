@@ -4,7 +4,7 @@ import java.util.concurrent.RecursiveTask;
 
 /** Class that implements a parallel check if the number is prime. */
 class ForkJoinPrime extends RecursiveTask<Boolean> {
-  private static final int THRESHOLD = 10_000;
+  private static final int THRESHOLD = 150;
   private final int[] numbers;
   private final int start;
   private final int end;
