@@ -74,7 +74,8 @@ public class PrimeNumbersTests {
     int[] arr = new int[8000];
     Arrays.fill(arr, 1000000007);
     PrimeNumbers p = new PrimeNumbers(arr);
-    Assert.assertFalse(p.parallel());
+    Assert.assertFalse(!p.parallel());
+  }
   }
 
   @Test
