@@ -17,7 +17,7 @@ public class Fruit {
   /** Generates a random Position for the fruit. */
   public void generateRandomPosition() {
     int min = 0;
-    int max = snake.getFieldsize() - 1;
+    int max = snake.getFieldSize() - 1;
     int x = ThreadLocalRandom.current().nextInt(min, max + 1);
     int y = ThreadLocalRandom.current().nextInt(min, max + 1);
 

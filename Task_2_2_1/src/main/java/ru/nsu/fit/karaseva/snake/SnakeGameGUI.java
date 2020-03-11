@@ -20,16 +20,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
@@ -44,6 +47,7 @@ public class SnakeGameGUI extends Application {
   private HBox buttonBox;
   private Button btnPlay;
   private Button btnPause;
+  private Button btnMenu;
 
   private HBox scoreBox;
   private Label scoreName;
@@ -59,7 +63,7 @@ public class SnakeGameGUI extends Application {
   private Fruit fruit;
 
   private int gridSize = 30;
-  private final double speed = 250;
+  private final double speed = 200;
 
   private final Font fatFont = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 25);
   private final Font mediumFont = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20);
@@ -89,13 +93,17 @@ public class SnakeGameGUI extends Application {
 
     btnPlay = new Button("Start");
     btnPlay.setFont(smallFont);
-    btnPause = new Button("II");
+    btnPause = new Button("Pause");
     btnPause.setFont(mediumFont);
+    btnMenu = new Button("Menu");
+    btnMenu.setFont(smallFont);
 
     btnPlay.setMinWidth(100);
     btnPlay.setMinHeight(60);
     btnPause.setMinWidth(100);
     btnPause.setMinHeight(60);
+    btnMenu.setMinWidth(100);
+    btnMenu.setMinHeight(60);
 
     scoreBox = new HBox(3.0);
     scoreBox.getChildren().addAll(scoreName, scoreValue);
@@ -103,7 +111,7 @@ public class SnakeGameGUI extends Application {
     HBox.setMargin(scoreValue, new Insets(10, 0, 0, 0));
 
     buttonBox = new HBox(8.0);
-    buttonBox.getChildren().addAll(btnPlay, btnPause);
+    buttonBox.getChildren().addAll(btnPlay, btnPause, btnMenu);
     HBox.setMargin(btnPlay, new Insets(0, 0, 10, 0));
 
     btnPlay.setOnAction(
@@ -115,7 +123,7 @@ public class SnakeGameGUI extends Application {
           if (paused) {
             restartGame();
             btnPlay.setText("Start");
-            btnPause.setText("II");
+            btnPause.setText("Pause");
           }
         });
 
@@ -123,15 +131,24 @@ public class SnakeGameGUI extends Application {
         event -> {
           if (paused) {
             timeline.play();
-            btnPause.setText("II");
+            btnPause.setText("Pause");
             btnPlay.setText("Start");
             paused = false;
           } else {
             timeline.pause();
             paused = true;
-            btnPause.setText(">");
+            btnPause.setText("Continue");
             btnPlay.setText("Restart");
           }
+        });
+
+    btnMenu.setOnAction(
+        event -> {
+          timeline.pause();
+          paused = true;
+          btnPause.setText("Pause");
+          btnPlay.setText("Start");
+          createMenuPane();
         });
 
     root.addEventFilter(
@@ -155,12 +172,8 @@ public class SnakeGameGUI extends Application {
     primaryStage.show();
   }
 
-  public void setSizeOfGrid(int size){
-    this.gridSize = size;
-  }
-
   /** Starts the timeline for the snake game and monitors the snake action. */
-  private void startSnakeGame() {
+  public void startSnakeGame() {
     hasGameStarted = true;
     paused = false;
     timeline =
@@ -225,7 +238,7 @@ public class SnakeGameGUI extends Application {
   }
 
   private void snakeEatsFruit() {
-    snake.eatFruit(fruit);
+    snake.eatFruit();
     scoreValue.setText(Integer.toString(snake.getScore()));
     fruit.generateRandomPosition();
   }
@@ -281,5 +294,82 @@ public class SnakeGameGUI extends Application {
           gameOverStage.close();
           restartGame();
         });
+  }
+
+  private void createMenuPane() {
+    Stage menuStage = new Stage();
+    BorderPane menuScreen = new BorderPane();
+    menuScreen.setPrefHeight(500);
+    menuScreen.setPrefWidth(500);
+    Label gameOver = new Label("Menu");
+    gameOver.setTextFill(Color.BLACK);
+    gameOver.setFont(Font.font("Courier New", FontWeight.BOLD, 60));
+    menuScreen.setCenter(gameOver);
+    menuScreen.setPadding(new Insets(0, 0, 10, 0));
+
+    Button restart = new Button("New Game");
+    Button quit = new Button("Exit Game");
+    Button help = new Button("Help");
+    VBox buttonBoxGameOver = new VBox(3.0);
+    buttonBoxGameOver.getChildren().addAll(restart, quit, help);
+    menuScreen.setBottom(buttonBoxGameOver);
+    buttonBoxGameOver.setAlignment(Pos.BOTTOM_CENTER);
+
+    menuStage.setTitle("Menu");
+    menuStage.setScene(new Scene(menuScreen, 380, 200));
+    menuStage.show();
+
+    menuStage.setOnCloseRequest(
+        new EventHandler<WindowEvent>() {
+          @Override
+          public void handle(WindowEvent we) {
+            Platform.exit();
+            System.exit(0);
+          }
+        });
+
+    /** Exit the game. */
+    quit.setOnAction(
+        (ActionEvent e) -> {
+          Platform.exit();
+          System.exit(0);
+        });
+    /** Start the new game. */
+    restart.setOnAction(
+        (ActionEvent e) -> {
+          menuStage.close();
+          restartGame();
+        });
+
+    help.setOnAction(
+        (ActionEvent e) -> {
+          menuStage.close();
+          createHelpPane();
+        });
+  }
+
+  public void createHelpPane() {
+    Stage helpStage = new Stage();
+    BorderPane helpScreen = new BorderPane();
+    helpScreen.setPrefHeight(500);
+    helpScreen.setPrefWidth(500);
+    Label helper = new Label("Help");
+    helper.setTextFill(Color.BLACK);
+    helper.setFont(Font.font("Courier New", FontWeight.BOLD, 30));
+    helpScreen.setCenter(helper);
+    helpScreen.setPadding(new Insets(0, 0, 10, 0));
+
+    VBox help = new VBox(3.0);
+    Text text1 = new Text("Press W  -  move up");
+    Text text2 = new Text("Press S  -  move down");
+    Text text3 = new Text("Press A  -  move left");
+    Text text4 = new Text("Press D  -  move right");
+    help.getChildren().addAll(text1, text2, text3, text4);
+    helpScreen.setBottom(help);
+    help.setAlignment(Pos.BOTTOM_CENTER);
+
+    helpStage.setTitle("Settings");
+    helpStage.setScene(new Scene(helpScreen, 380, 200));
+    helpStage.show();
   }
 }

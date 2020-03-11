@@ -1,8 +1,8 @@
 package ru.nsu.fit.karaseva.snake;
 
 /**
- * The Position allows to define a positive location on a grid Objects like Snake and
- * Fruit have a certain position that can be represented with this class.
+ * The Position allows to define a positive location on a grid Objects like Snake and Fruit have a
+ * certain position that can be represented with this class.
  */
 public class Position {
 

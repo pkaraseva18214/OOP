@@ -1,9 +1,7 @@
 package ru.nsu.fit.karaseva.snake;
 
 import static ru.nsu.fit.karaseva.snake.Direction.NORTH;
-
 import java.util.LinkedList;
-import javafx.application.Platform;
 
 /**
  * The Snake class allows to create a snake object that can move within a certain field size and can
@@ -15,8 +13,7 @@ public class Snake {
   private final int fieldSize;
   private boolean snakeAlive = true;
   private int score;
-  private int fruitsEaten;
-  private int death = 5;
+  private int death = 20;
 
   /**
    * Creates a snake that can crawl in a fixed sized field of size max.
@@ -38,16 +35,12 @@ public class Snake {
     }
   }
 
-  public int getFieldsize() {
+  public int getFieldSize() {
     return fieldSize;
   }
 
   public boolean isSnakeAlive() {
     return snakeAlive;
-  }
-
-  public LinkedList<Position> getSnakebody() {
-    return snakeBody;
   }
 
   /**
@@ -83,21 +76,14 @@ public class Snake {
   /**
    * Performs action that is taken, when a fruit is eaten: Adding body elements to the snakebody
    * with the same direction as the last body element depending on the fruit value.
-   *
-   * @param fruit The fruit which the snake eats
    */
-  public void eatFruit(Fruit fruit) {
+  public void eatFruit() {
     try {
       Position lastPos = snakeBody.getLast();
       Direction dir = lastPos.getDirection();
       Position pos = new Position(lastPos.getX(), lastPos.getY(), dir);
       snakeBody.add(pos);
       score++;
-      fruitsEaten++;
-      if (snakeBody.size() > death){
-        Platform.exit();
-        System.exit(0);
-      }
     } catch (InvalidSnakePositionException e) {
       e.printStackTrace();
     }
@@ -128,7 +114,11 @@ public class Snake {
    * @return true if the snake ran out of the field or ran over itself
    */
   public boolean isGameOver() {
-    return snakeRanOutOfField() || snakeRanOverItself();
+    return snakeRanOutOfField() || snakeRanOverItself() || isMaxLength();
+  }
+
+  private boolean isMaxLength(){
+    return (snakeBody.size() - 2 >= death);
   }
 
   /**
@@ -199,4 +189,7 @@ public class Snake {
     return score;
   }
 
+  /*public void setDeathLength(String length){
+
+  }*/
 }
