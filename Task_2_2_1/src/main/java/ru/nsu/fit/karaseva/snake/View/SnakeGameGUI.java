@@ -1,12 +1,12 @@
-package ru.nsu.fit.karaseva.snake;
+package ru.nsu.fit.karaseva.snake.View;
 
-import static ru.nsu.fit.karaseva.snake.Direction.EAST;
-import static ru.nsu.fit.karaseva.snake.Direction.NORTH;
-import static ru.nsu.fit.karaseva.snake.Direction.SOUTH;
-import static ru.nsu.fit.karaseva.snake.Direction.WEST;
-import static ru.nsu.fit.karaseva.snake.CellStatus.BOARD;
-import static ru.nsu.fit.karaseva.snake.CellStatus.FRUIT;
-import static ru.nsu.fit.karaseva.snake.CellStatus.SNAKE;
+import static ru.nsu.fit.karaseva.snake.Model.Direction.EAST;
+import static ru.nsu.fit.karaseva.snake.Model.Direction.NORTH;
+import static ru.nsu.fit.karaseva.snake.Model.Direction.SOUTH;
+import static ru.nsu.fit.karaseva.snake.Model.Direction.WEST;
+import static ru.nsu.fit.karaseva.snake.View.CellStatus.BOARD;
+import static ru.nsu.fit.karaseva.snake.View.CellStatus.FRUIT;
+import static ru.nsu.fit.karaseva.snake.View.CellStatus.SNAKE;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -20,7 +20,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -36,6 +35,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import ru.nsu.fit.karaseva.snake.Model.Direction;
+import ru.nsu.fit.karaseva.snake.Model.Fruit;
+import ru.nsu.fit.karaseva.snake.Model.Snake;
 
 /**
  * The SnakeGameGUI creates the whole look of the Snake game. Moreover it is responsible for

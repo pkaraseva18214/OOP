@@ -1,6 +1,6 @@
-package ru.nsu.fit.karaseva.snake;
+package ru.nsu.fit.karaseva.snake.Model;
 
-import static ru.nsu.fit.karaseva.snake.Direction.NORTH;
+import static ru.nsu.fit.karaseva.snake.Model.Direction.NORTH;
 
 import java.util.concurrent.ThreadLocalRandom;
 
