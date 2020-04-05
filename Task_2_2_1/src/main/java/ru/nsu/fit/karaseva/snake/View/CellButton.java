@@ -1,10 +1,9 @@
-package ru.nsu.fit.karaseva.snake.View;
+package ru.nsu.fit.karaseva.snake.view;
 
-import static ru.nsu.fit.karaseva.snake.View.CellStatus.BOARD;
-import static ru.nsu.fit.karaseva.snake.View.CellStatus.FRUIT;
-import static ru.nsu.fit.karaseva.snake.View.CellStatus.SNAKE;
+import static ru.nsu.fit.karaseva.snake.view.CellStatus.BOARD;
+import static ru.nsu.fit.karaseva.snake.view.CellStatus.FRUIT;
+import static ru.nsu.fit.karaseva.snake.view.CellStatus.SNAKE;
 import javafx.scene.control.Button;
-import ru.nsu.fit.karaseva.snake.View.CellStatus;
 
 /**
  * The CellButton allows a specific representation of a button that is used to create a game pane

@@ -1,12 +1,12 @@
-package ru.nsu.fit.karaseva.snake.View;
+package ru.nsu.fit.karaseva.snake.view;
 
-import static ru.nsu.fit.karaseva.snake.Model.Direction.EAST;
-import static ru.nsu.fit.karaseva.snake.Model.Direction.NORTH;
-import static ru.nsu.fit.karaseva.snake.Model.Direction.SOUTH;
-import static ru.nsu.fit.karaseva.snake.Model.Direction.WEST;
-import static ru.nsu.fit.karaseva.snake.View.CellStatus.BOARD;
-import static ru.nsu.fit.karaseva.snake.View.CellStatus.FRUIT;
-import static ru.nsu.fit.karaseva.snake.View.CellStatus.SNAKE;
+import static ru.nsu.fit.karaseva.snake.model.Direction.EAST;
+import static ru.nsu.fit.karaseva.snake.model.Direction.NORTH;
+import static ru.nsu.fit.karaseva.snake.model.Direction.SOUTH;
+import static ru.nsu.fit.karaseva.snake.model.Direction.WEST;
+import static ru.nsu.fit.karaseva.snake.view.CellStatus.BOARD;
+import static ru.nsu.fit.karaseva.snake.view.CellStatus.FRUIT;
+import static ru.nsu.fit.karaseva.snake.view.CellStatus.SNAKE;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -35,9 +35,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import ru.nsu.fit.karaseva.snake.Model.Direction;
-import ru.nsu.fit.karaseva.snake.Model.Fruit;
-import ru.nsu.fit.karaseva.snake.Model.Snake;
+import ru.nsu.fit.karaseva.snake.model.Direction;
+import ru.nsu.fit.karaseva.snake.model.Fruit;
+import ru.nsu.fit.karaseva.snake.model.Snake;
 
 /**
  * The SnakeGameGUI creates the whole look of the Snake game. Moreover it is responsible for

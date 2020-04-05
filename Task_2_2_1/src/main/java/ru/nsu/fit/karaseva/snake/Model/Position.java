@@ -1,4 +1,4 @@
-package ru.nsu.fit.karaseva.snake.Model;
+package ru.nsu.fit.karaseva.snake.model;
 
 /**
  * The Position allows to define a positive location on a grid Objects like Snake and Fruit have a

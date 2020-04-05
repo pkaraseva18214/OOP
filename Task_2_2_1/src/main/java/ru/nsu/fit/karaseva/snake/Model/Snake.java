@@ -1,11 +1,7 @@
-package ru.nsu.fit.karaseva.snake.Model;
+package ru.nsu.fit.karaseva.snake.model;
 
-import static ru.nsu.fit.karaseva.snake.Model.Direction.NORTH;
+import static ru.nsu.fit.karaseva.snake.model.Direction.NORTH;
 import java.util.LinkedList;
-import ru.nsu.fit.karaseva.snake.Model.Direction;
-import ru.nsu.fit.karaseva.snake.Model.Fruit;
-import ru.nsu.fit.karaseva.snake.Model.InvalidSnakePositionException;
-import ru.nsu.fit.karaseva.snake.Model.Position;
 
 /**
  * The Snake class allows to create a snake object that can move within a certain field size and can

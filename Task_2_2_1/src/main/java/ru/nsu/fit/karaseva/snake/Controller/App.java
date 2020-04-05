@@ -1,7 +1,7 @@
-package ru.nsu.fit.karaseva.snake.Controller;
+package ru.nsu.fit.karaseva.snake.controller;
 
 import javafx.application.Application;
-import ru.nsu.fit.karaseva.snake.View.SnakeGameGUI;
+import ru.nsu.fit.karaseva.snake.view.SnakeGameGUI;
 
 @SuppressWarnings("restriction")
 public class App {

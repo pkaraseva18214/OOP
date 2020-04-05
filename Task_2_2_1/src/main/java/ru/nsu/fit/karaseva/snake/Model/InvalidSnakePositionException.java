@@ -1,4 +1,4 @@
-package ru.nsu.fit.karaseva.snake.Model;
+package ru.nsu.fit.karaseva.snake.model;
 
 public class InvalidSnakePositionException extends Exception {
 
