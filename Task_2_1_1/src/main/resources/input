@@ -1,0 +1,33 @@
+{
+  "pizzaChefs": [
+    {
+      "id": "1",
+      "cookingTime": "10000"
+    },
+    {
+      "id": "2",
+      "cookingTime": "10000"
+    },
+    {
+      "id": "3",
+      "cookingTime": "10000"
+    }
+  ],
+  "deliveryWorkers": [
+    {
+      "id": "1",
+      "deliveryTime": "5000",
+      "capacity": "3"
+    },
+    {
+      "id": "2",
+      "deliveryTime": "6000",
+      "capacity": "3"
+    },
+    {
+      "id": "3",
+      "deliveryTime": "5000",
+      "capacity": "3"
+    }
+  ]
+}
