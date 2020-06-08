@@ -8,16 +8,10 @@ import java.util.Objects;
 /**
  * Class that represents work of the delivery worker in pizzeria.
  */
-class DeliveryWorker implements Runnable {
-  private static final int WAITING_TIME = 1000;
-
-  @JsonProperty("id")
+public class DeliveryWorker implements Runnable {
+  private static int WAITING_TIME = 1000;
   private final int id;
-
-  @JsonProperty("capacity")
   private final int capacity;
-
-  @JsonProperty("deliveryTime")
   private final int deliveryTime;
 
   private final List<Order> bag;
@@ -28,33 +22,57 @@ class DeliveryWorker implements Runnable {
   DeliveryWorker(
       @JsonProperty("id") int id,
       @JsonProperty("deliveryTime") int deliveryTime,
-      @JsonProperty("howManyPizzasCanCarry") int capacity) {
+      @JsonProperty("capacity") int capacity) {
     this.id = id;
     this.deliveryTime = deliveryTime;
     this.capacity = capacity;
     this.bag = new ArrayList<>();
   }
 
+  /**
+   * Returns id of the delivery worker.
+   * @return
+   */
   int getId() {
     return id;
   }
 
+  /**
+   * Returns delivery time of the delivery worker.
+   * @return
+   */
   int getDeliveryTime() {
     return deliveryTime;
   }
 
-  int getNumOfPizzasCanCarry() {
+  /**
+   * Returns capacity of the delivery worker's bag.
+   * @return
+   */
+  int getCapacity() {
     return capacity;
   }
 
+  /**
+   * Set storage of cooked pizzas.
+   * @param storage
+   */
   void setStorage(Storage storage) {
     this.storage = storage;
   }
 
-  void setPizzaRestaurantHeadquarters(PizzeriaOverview pizzeriaOverview) {
+  /**
+   * Sets pizzeria overview.
+   * @param pizzeriaOverview
+   */
+  void setPizzeriaOverview(PizzeriaOverview pizzeriaOverview) {
     this.pizzeriaOverview = pizzeriaOverview;
   }
 
+  /**
+   * Sets delivery workers.
+   * @param deliveryWorkers
+   */
   void setDeliveryWorkers(DeliveryWorkers deliveryWorkers) {
     this.deliveryWorkers = deliveryWorkers;
   }
@@ -63,7 +81,7 @@ class DeliveryWorker implements Runnable {
   public void run() {
     while (!pizzeriaOverview.isRestaurantClosed()
         || !(storage.numOfItemsInStorage() == 0
-            && pizzeriaOverview.areAllBakersFinishedWork())) {
+        && pizzeriaOverview.areAllBakersFinishedWork())) {
 
       boolean isClosed = false;
       deliveryWorkers.lock.lock();
@@ -82,7 +100,7 @@ class DeliveryWorker implements Runnable {
                 System.out.println(
                     "Delivery Worker #"
                         + id
-                        + " is ready to deliver! Another pizza would fit in the bag.");
+                        + " is ready to deliver. Another pizza would fit in the bag.");
                 break;
               }
               bag.add(order);
@@ -137,7 +155,6 @@ class DeliveryWorker implements Runnable {
       try {
         for (Order order : bag) {
           Thread.sleep(deliveryTime);
-          pizzeriaOverview.completeOrder();
           System.out.println("Delivery Worker #" + id + " delivered your pizza.");
         }
         System.out.println("Delivery Worker #" + id + " delivered all the orders.");

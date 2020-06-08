@@ -26,12 +26,13 @@ class DeliveryWorkers {
       Storage storage,
       PizzeriaOverview pizzeriaOverview) {
 
-    pizzeriaOverview.setNumberOfDeliveryWorkers(employees.deliveryWorkers.length);
-    ExecutorService executor = Executors.newFixedThreadPool(employees.deliveryWorkers.length);
+    pizzeriaOverview.setNumberOfDeliveryWorkers(employees.getNumberOfDeliveryWorkers());
+    ExecutorService executor = Executors.newFixedThreadPool(employees.getNumberOfDeliveryWorkers());
 
-    for (DeliveryWorker deliveryWorker : employees.deliveryWorkers) {
+    int o = 0;
+    for (DeliveryWorker deliveryWorker = employees.getDeliveryWorker(o); o < employees.getNumberOfDeliveryWorkers(); o++) {
       deliveryWorker.setDeliveryWorkers(this);
-      deliveryWorker.setPizzaRestaurantHeadquarters(pizzeriaOverview);
+      deliveryWorker.setPizzeriaOverview(pizzeriaOverview);
       deliveryWorker.setStorage(storage);
 
       Future<?> future = executor.submit(deliveryWorker);

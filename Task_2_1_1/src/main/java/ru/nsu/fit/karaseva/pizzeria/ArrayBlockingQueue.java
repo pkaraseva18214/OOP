@@ -3,7 +3,7 @@ package ru.nsu.fit.karaseva.pizzeria;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-
+/*
 class ArrayBlockingQueue<E> {
 
   private final ReentrantLock lock;
@@ -96,3 +96,4 @@ class ArrayBlockingQueue<E> {
     }
   }
 }
+*/

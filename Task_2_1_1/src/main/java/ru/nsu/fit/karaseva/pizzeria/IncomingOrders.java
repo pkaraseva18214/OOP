@@ -13,7 +13,7 @@ class IncomingOrders {
   }
 
   boolean areThereAnyOrders() {
-    return waitingOrders.isEmpty();
+    return !waitingOrders.isEmpty();
   }
 
   void order(Order order) {

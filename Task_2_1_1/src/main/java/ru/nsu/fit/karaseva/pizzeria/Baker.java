@@ -5,14 +5,9 @@ import com.fasterxml.jackson.annotation.*;
 /**
  * Class that represents work of the baker in pizzeria.
  */
-class Baker implements Runnable {
-
-  @JsonProperty("id")
+public class Baker implements Runnable {
   private final int id;
-
-  @JsonProperty("cookingTime")
   private final int cookingTime;
-
   private boolean waitingForOrder;
 
   private Storage storage;
@@ -26,30 +21,58 @@ class Baker implements Runnable {
     waitingForOrder = false;
   }
 
+  /**
+   * Returns id of the baker.
+   * @return id of the baker
+   */
   int getId() {
     return id;
   }
 
+  /**
+   * Returns cooking time of the baker.
+   * @return cooking time
+   */
   int getCookingTime() {
     return cookingTime;
   }
 
+  /**
+   * Returns waiting status of the baker.
+   * @return true - if baker is waiting for order, otherwise false.
+   */
   boolean isWaitingForOrder() {
     return waitingForOrder;
   }
 
+  /**
+   * Sets storage of cooked pizzas.
+   * @param storage - storage of cooked pizzas.
+   */
   void setStorage(Storage storage) {
     this.storage = storage;
   }
 
+  /**
+   * Sets incoming orders for bakers.
+   * @param incomingOrders
+   */
   void setIncomingOrders(IncomingOrders incomingOrders) {
     this.incomingOrders = incomingOrders;
   }
 
+  /**
+   * Sets overview of the pizzeria.
+   * @param pizzeriaOverview
+   */
   void setPizzeriaOverview(PizzeriaOverview pizzeriaOverview) {
     this.pizzeriaOverview = pizzeriaOverview;
   }
 
+  /**
+   * Sets bakers of the pizzeria.
+   * @param bakers
+   */
   void setBakers(Bakers bakers) {
     this.bakers = bakers;
   }
@@ -70,6 +93,11 @@ class Baker implements Runnable {
         }
         currentOrder = incomingOrders.takeOrder();
         this.waitingForOrder = false;
+        try{
+          Thread.sleep(cookingTime);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
       } finally {
         bakers.lock.unlock();
       }

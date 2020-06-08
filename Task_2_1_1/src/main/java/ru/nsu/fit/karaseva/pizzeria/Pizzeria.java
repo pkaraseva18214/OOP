@@ -5,7 +5,7 @@ import java.util.stream.IntStream;
 
 /** Class that represents a pizzeria. There are bakers and delivery workers. */
 public class Pizzeria {
-  private static final int WAITING_TIME_MILLISECONDS = 3000;
+  private static int waitingTimeMilliseconds = 3000;
   private final Employees employees;
   private final Bakers bakers;
   private final DeliveryWorkers deliveryWorkers;
@@ -13,6 +13,11 @@ public class Pizzeria {
   private final IncomingOrders incomingOrders;
   private final Storage storage;
 
+  /**
+   * Constructor of Pizzeria Class.
+   * @param employeesParameters file that has list of staff.
+   * @param storageIn storage of cooked pizzas.
+   */
   public Pizzeria(File employeesParameters, int storageIn) {
     JSONReader reader = new JSONReader();
     employees = reader.readParameters(employeesParameters);
@@ -25,7 +30,6 @@ public class Pizzeria {
 
   /**
    * Get orders, make them, closes the restaurant, and returns the pizzeriaHeadquarters object.
-   *
    * @param numberOfOrders total number of orders
    * @return the pizzaRestaurantHeadquarters object
    */
@@ -33,7 +37,7 @@ public class Pizzeria {
     bakers.run(employees, storage, incomingOrders, pizzeriaOverview);
     deliveryWorkers.run(employees, storage, pizzeriaOverview);
     IntStream.range(0, numberOfOrders).forEach(i -> order());
-    closeRestaurant();
+    closePizzeria();
     return pizzeriaOverview;
   }
 
@@ -45,13 +49,13 @@ public class Pizzeria {
     incomingOrders.order(order);
   }
 
-  private void closeRestaurant() {
+  private void closePizzeria() {
     pizzeriaOverview.closePizzeria();
 
     while (!incomingOrders.areThereAnyOrders()) {
       try {
-        Thread.sleep(WAITING_TIME_MILLISECONDS);
-      } catch (InterruptedException e) {
+        Thread.sleep(waitingTimeMilliseconds);
+      } catch (InterruptedException e) {  //возникнет, если какой-то другой поток прервет работу данного потока.
         e.printStackTrace();
       }
     }
@@ -67,10 +71,18 @@ public class Pizzeria {
         || !pizzeriaOverview.areAllDeliveryWorkersFinishedWork()) {
 
       try {
-        Thread.sleep(WAITING_TIME_MILLISECONDS);
+        Thread.sleep(waitingTimeMilliseconds);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * Give you opportunity to set waiting time in pizzeria.
+   * @param waitingTime
+   */
+  public void setWainingTime(int waitingTime){
+    waitingTimeMilliseconds = waitingTime;
   }
 }

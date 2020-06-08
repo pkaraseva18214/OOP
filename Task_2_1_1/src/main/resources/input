@@ -1,5 +1,5 @@
 {
-  "pizzaChefs": [
+  "bakers": [
     {
       "id": "1",
       "cookingTime": "10000"

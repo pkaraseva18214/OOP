@@ -26,10 +26,11 @@ class Bakers {
       IncomingOrders incomingOrders,
       PizzeriaOverview pizzeriaOverview) {
 
-    pizzeriaOverview.setNumberOfBakers(employees.bakers.length);
-    ExecutorService executorService = Executors.newFixedThreadPool(employees.bakers.length);
+    pizzeriaOverview.setNumberOfBakers(employees.getNumberOfBakers());
+    ExecutorService executorService = Executors.newFixedThreadPool(employees.getNumberOfBakers());
 
-    for (Baker baker : employees.bakers) {
+    int o = 0;
+    for (Baker baker = employees.getBaker(o); o < employees.getNumberOfBakers(); o++) {
       baker.setBakers(this);
       baker.setPizzeriaOverview(pizzeriaOverview);
       baker.setStorage(storage);

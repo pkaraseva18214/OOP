@@ -4,14 +4,14 @@ import java.io.File;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class Tests {
+public class WorkTest {
   @Test
-  public void test1() {
+  public void allDeliveryWorkersFinishedTheirWorkSuccessfully() {
     JSONReader jsonReader = new JSONReader();
     File employeesParameters = new File("src/main/resources/input");
     Employees employees = jsonReader.readParameters(employeesParameters);
-    Assert.assertEquals(3, employees.bakers.length);
-    Assert.assertEquals(3, employees.deliveryWorkers.length);
+    Assert.assertEquals(3, employees.getNumberOfBakers());
+    Assert.assertEquals(3, employees.getNumberOfDeliveryWorkers());
 
     DeliveryWorkers deliveryWorkers = new DeliveryWorkers();
     PizzeriaOverview pizzeriaOverview = new PizzeriaOverview();
@@ -21,13 +21,13 @@ public class Tests {
     DeliveryWorker deliveryWorker2 = new DeliveryWorker(2, 6000, 3);
     DeliveryWorker deliveryWorker3 = new DeliveryWorker(3, 5000, 3);
     deliveryWorker1.setDeliveryWorkers(deliveryWorkers);
-    deliveryWorker1.setPizzaRestaurantHeadquarters(pizzeriaOverview);
+    deliveryWorker1.setPizzeriaOverview(pizzeriaOverview);
     deliveryWorker1.setStorage(storage);
     deliveryWorker2.setDeliveryWorkers(deliveryWorkers);
-    deliveryWorker2.setPizzaRestaurantHeadquarters(pizzeriaOverview);
+    deliveryWorker2.setPizzeriaOverview(pizzeriaOverview);
     deliveryWorker2.setStorage(storage);
     deliveryWorker3.setDeliveryWorkers(deliveryWorkers);
-    deliveryWorker3.setPizzaRestaurantHeadquarters(pizzeriaOverview);
+    deliveryWorker3.setPizzeriaOverview(pizzeriaOverview);
     deliveryWorker3.setStorage(storage);
     pizzeriaOverview.setNumberOfDeliveryWorkers(3);
 
@@ -59,52 +59,7 @@ public class Tests {
   }
 
   @Test
-  public void test2(){
-    JSONReader jsonReader = new JSONReader();
-    File employeesParameters = new File("src/main/resources/input");
-    Employees employees = jsonReader.readParameters(employeesParameters);
-
-    Assert.assertEquals(3, employees.bakers.length);
-    Assert.assertEquals(1, employees.bakers[0].getId());
-    Assert.assertEquals(2, employees.bakers[1].getId());
-    Assert.assertEquals(10000, employees.bakers[0].getCookingTime());
-    Assert.assertEquals(10000, employees.bakers[2].getCookingTime());
-
-    Assert.assertEquals(2, employees.deliveryWorkers[1].getId());
-    Assert.assertEquals(3, employees.deliveryWorkers[2].getId());
-    Assert.assertEquals(6000, employees.deliveryWorkers[1].getDeliveryTime());
-    Assert.assertEquals(5000, employees.deliveryWorkers[2].getDeliveryTime());
-    Assert.assertEquals(3, employees.deliveryWorkers[0].getNumOfPizzasCanCarry());
-    Assert.assertEquals(3, employees.deliveryWorkers[2].getNumOfPizzasCanCarry());
-  }
-
-  @Test
-  public void test3(){
-    Storage storage = new Storage(9);
-    PizzeriaOverview pizzeriaOverview = new PizzeriaOverview();
-    IncomingOrders incomingOrders = new IncomingOrders();
-    DeliveryWorkers deliveryWorkers = new DeliveryWorkers();
-    Bakers bakers = new Bakers();
-    int numberOfBakers = 0;
-
-    JSONReader jsonReader = new JSONReader();
-    File employeesParameters = new File("src/main/resources/input");
-    Employees employees = jsonReader.readParameters(employeesParameters);
-
-    deliveryWorkers.run(employees, storage, pizzeriaOverview);
-    bakers.run(employees, storage, incomingOrders, pizzeriaOverview);
-    Baker baker;
-    for (FutureObjectPair a : bakers.getBakersAndPizzas()) {
-      numberOfBakers++;
-      baker = (Baker) a.object;
-      Assert.assertTrue(baker.getId() >= 1);
-    }
-    Assert.assertEquals(3, numberOfBakers);
-    Assert.assertEquals(3, deliveryWorkers.getOrders().size());
-  }
-
-  @Test
-  public void test4(){
+  public void pizzeriaAndAllStaffFinishedTheirWorkSuccessfully() {
     File employeesParameters = new File("src/main/resources/input");
     Pizzeria pizzeria = new Pizzeria(employeesParameters, 9);
     PizzeriaOverview pizzeriaOverview = pizzeria.start(5);
@@ -115,7 +70,7 @@ public class Tests {
   }
 
   @Test
-  public void test5(){
+  public void allBakersFinishedTheirWorkSuccessfully() {
     IncomingOrders incomingOrders = new IncomingOrders();
     Bakers bakers = new Bakers();
     PizzeriaOverview pizzeriaOverview = new PizzeriaOverview();
@@ -168,5 +123,4 @@ public class Tests {
     }
     Assert.assertTrue(pizzeriaOverview.areAllBakersFinishedWork());
   }
-
 }

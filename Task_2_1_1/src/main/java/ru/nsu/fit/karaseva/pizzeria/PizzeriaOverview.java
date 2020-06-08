@@ -5,19 +5,20 @@ package ru.nsu.fit.karaseva.pizzeria;
  */
 public class PizzeriaOverview {
   private int currentOrderId;
-  private int numOfCompletedOrders;
-  private int numOfPizzaChefs;
+  private int numOfBakers;
   private int numOfDeliveryWorkers;
-  private int numOfPizzaChefsFinishedWork;
+  private int numOfBakersFinishedWork;
   private int numOfDeliveryWorkersFinishedWork;
-  private boolean restaurantIsClosed;
+  private boolean pizzeriaIsClosed;
 
+  /**
+   * Constructor of PizzeriaOverview Class.
+   */
   public PizzeriaOverview() {
     currentOrderId = 0;
-    numOfCompletedOrders = 0;
-    numOfPizzaChefsFinishedWork = 0;
+    numOfBakersFinishedWork = 0;
     numOfDeliveryWorkersFinishedWork = 0;
-    restaurantIsClosed = false;
+    pizzeriaIsClosed = false;
   }
 
   /**
@@ -25,7 +26,7 @@ public class PizzeriaOverview {
    * @return true if the restaurant is closed
    */
   public boolean isRestaurantClosed() {
-    return restaurantIsClosed;
+    return pizzeriaIsClosed;
   }
 
   /**
@@ -33,7 +34,7 @@ public class PizzeriaOverview {
    * @return true if all bakers finished their work.
    */
   public boolean areAllBakersFinishedWork() {
-    return numOfPizzaChefs == numOfPizzaChefsFinishedWork;
+    return  numOfBakers == numOfBakersFinishedWork;
   }
 
   /**
@@ -52,32 +53,48 @@ public class PizzeriaOverview {
     return currentOrderId;
   }
 
+  /**
+   * Updates order's id.
+   */
   void updateCurrentOrderId() {
     currentOrderId++;
   }
 
-  void completeOrder() {
-    numOfCompletedOrders++;
+  /**
+   * Sets number of bakers.
+   * @param numOfBakers
+   */
+  void setNumberOfBakers(int numOfBakers) {
+    this.numOfBakers = numOfBakers;
   }
 
-  void setNumberOfBakers(int numOfPizzaChefs) {
-    this.numOfPizzaChefs = numOfPizzaChefs;
-  }
-
+  /**
+   * Sets number of delivery workers.
+   * @param numOfDeliveryWorkers
+   */
   void setNumberOfDeliveryWorkers(int numOfDeliveryWorkers) {
     this.numOfDeliveryWorkers = numOfDeliveryWorkers;
   }
 
+  /**
+   * Ends shift for baker.
+   */
   void endShiftForBaker() {
-    numOfPizzaChefsFinishedWork++;
+    numOfBakersFinishedWork++;
   }
 
+  /**
+   * Ends shift for delivery worker.
+   */
   void endShiftForDeliveryWorker() {
     numOfDeliveryWorkersFinishedWork++;
   }
 
+  /**
+   * Set status of pizzeria as closed.
+   */
   void closePizzeria() {
-    restaurantIsClosed = true;
+    pizzeriaIsClosed = true;
   }
 
 }
