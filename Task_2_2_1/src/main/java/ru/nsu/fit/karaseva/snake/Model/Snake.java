@@ -189,7 +189,4 @@ public class Snake {
     return score;
   }
 
-  /*public void setDeathLength(String length){
-
-  }*/
 }

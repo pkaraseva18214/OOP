@@ -1,29 +1,11 @@
 package ru.nsu.fit.karaseva.snake.view;
 
-import static ru.nsu.fit.karaseva.snake.model.Direction.EAST;
-import static ru.nsu.fit.karaseva.snake.model.Direction.NORTH;
-import static ru.nsu.fit.karaseva.snake.model.Direction.SOUTH;
-import static ru.nsu.fit.karaseva.snake.model.Direction.WEST;
-import static ru.nsu.fit.karaseva.snake.view.CellStatus.BOARD;
-import static ru.nsu.fit.karaseva.snake.view.CellStatus.FRUIT;
-import static ru.nsu.fit.karaseva.snake.view.CellStatus.SNAKE;
-
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -33,71 +15,89 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import javafx.util.Duration;
-import ru.nsu.fit.karaseva.snake.model.Direction;
 import ru.nsu.fit.karaseva.snake.model.Fruit;
 import ru.nsu.fit.karaseva.snake.model.Snake;
 
-/**
- * The SnakeGameGUI creates the whole look of the Snake game. Moreover it is responsible for
- * handling user inputs and for playing the actual game.
- */
+/** The SnakeGameGUI creates the whole look of the Snake game. */
 @SuppressWarnings({"unchecked", "rawtypes", "restriction"})
-public class SnakeGameGUI extends Application {
-
-  private HBox buttonBox;
+public class SnakeGameGUI {
+  private int gridSize;
+  private Label scoreValue;
+  private Label scoreName;
+  private HBox scoreBox;
   private Button btnPlay;
+  private HBox buttonBox;
   private Button btnPause;
   private Button btnMenu;
-
-  private HBox scoreBox;
-  private Label scoreName;
-  private Label scoreValue;
-
-  private GridPane gamePane;
-  private Timeline timeline = new Timeline();
-  private Direction pressedDir;
-  private boolean hasGameStarted = false;
-  private boolean paused;
-
   private Snake snake;
   private Fruit fruit;
-
-  private int gridSize = 30;
-  private final double speed = 200;
 
   private final Font fatFont = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 25);
   private final Font mediumFont = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20);
   private final Font smallFont = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 15);
 
-  @Override
-  public void start(Stage primaryStage) throws Exception {
-
-    primaryStage.setTitle("Snake");
-    FlowPane root = new FlowPane(10, 10);
-    root.setAlignment(Pos.BOTTOM_CENTER);
-    primaryStage.setScene(new Scene(root));
-
-    snake = new Snake(gridSize);
-    fruit = new Fruit(snake);
-    gamePane = createGamePane();
-
+  public SnakeGameGUI(int gridSize, Snake snake, Fruit fruit) {
+    this.gridSize = gridSize;
+    this.snake = snake;
+    this.fruit = fruit;
+    scoreValue = new Label();
     scoreName = new Label("Score: ");
+    scoreBox = new HBox(3.0);
+    btnPlay = new Button("Start");
+    buttonBox = new HBox(8.0);
+    btnPause = new Button("Pause");
+    btnMenu = new Button("Menu");
+  }
+
+  public Label getScoreValue() {
+    return scoreValue;
+  }
+
+  public HBox getScoreBox() {
+    return scoreBox;
+  }
+
+  public Button getBtnPlay() {
+    return btnPlay;
+  }
+
+  public HBox getButtonBox() {
+    return buttonBox;
+  }
+
+  public Button getBtnPause() {
+    return btnPause;
+  }
+
+  public Button getBtnMenu() {
+    return btnMenu;
+  }
+
+  /**
+   * Sets score name.
+   */
+  public void setScoreName() {
     scoreName.setMinWidth(60);
     scoreName.setMinHeight(20);
     scoreName.setFont(fatFont);
-    scoreValue = new Label();
-    scoreValue.setText(Integer.toString(snake.getScore()));
+  }
+
+  /**
+   * Sets score value at the beginning of the game.
+   */
+  public void setScoreValue() {
+    scoreValue.setText("0");
     scoreValue.setMinWidth(60);
     scoreValue.setMinHeight(20);
     scoreValue.setFont(fatFont);
+  }
 
-    btnPlay = new Button("Start");
+  /**
+   * Sets buttons at the beginning of the game.
+   */
+  public void setButtons() {
     btnPlay.setFont(smallFont);
-    btnPause = new Button("Pause");
     btnPause.setFont(mediumFont);
-    btnMenu = new Button("Menu");
     btnMenu.setFont(smallFont);
 
     btnPlay.setMinWidth(100);
@@ -107,129 +107,19 @@ public class SnakeGameGUI extends Application {
     btnMenu.setMinWidth(100);
     btnMenu.setMinHeight(60);
 
-    scoreBox = new HBox(3.0);
     scoreBox.getChildren().addAll(scoreName, scoreValue);
     HBox.setMargin(scoreName, new Insets(10, 0, 0, 0));
     HBox.setMargin(scoreValue, new Insets(10, 0, 0, 0));
 
-    buttonBox = new HBox(8.0);
     buttonBox.getChildren().addAll(btnPlay, btnPause, btnMenu);
     HBox.setMargin(btnPlay, new Insets(0, 0, 10, 0));
-
-    btnPlay.setOnAction(
-        event -> {
-          if (!hasGameStarted) {
-            fruit.generateRandomPosition();
-            startSnakeGame();
-          }
-          if (paused) {
-            restartGame();
-            btnPlay.setText("Start");
-            btnPause.setText("Pause");
-          }
-        });
-
-    btnPause.setOnAction(
-        event -> {
-          if (paused) {
-            timeline.play();
-            btnPause.setText("Pause");
-            btnPlay.setText("Start");
-            paused = false;
-          } else {
-            timeline.pause();
-            paused = true;
-            btnPause.setText("Continue");
-            btnPlay.setText("Restart");
-          }
-        });
-
-    btnMenu.setOnAction(
-        event -> {
-          timeline.pause();
-          paused = true;
-          btnPause.setText("Pause");
-          btnPlay.setText("Start");
-          createMenuPane();
-        });
-
-    root.addEventFilter(
-        KeyEvent.KEY_PRESSED,
-        key -> {
-          if (key.getCode() == KeyCode.W) {
-            pressedDir = NORTH;
-          }
-          if (key.getCode() == KeyCode.A) {
-            pressedDir = WEST;
-          }
-          if (key.getCode() == KeyCode.S) {
-            pressedDir = SOUTH;
-          }
-          if (key.getCode() == KeyCode.D) {
-            pressedDir = EAST;
-          }
-        });
-
-    root.getChildren().addAll(scoreBox, gamePane, buttonBox);
-    primaryStage.show();
   }
 
-  /** Starts the timeline for the snake game and monitors the snake action. */
-  public void startSnakeGame() {
-    hasGameStarted = true;
-    paused = false;
-    timeline =
-        new Timeline(
-            new KeyFrame(
-                Duration.ZERO,
-                new EventHandler() {
-                  @Override
-                  public void handle(Event event) {
-                    if (pressedDir != null) {
-                      snake.setNewDirection(pressedDir);
-                    }
-                    snake.move();
-                    if (snake.snakeReachedFruit(fruit)) {
-                      snakeEatsFruit();
-                    }
-                    if (snake.isGameOver()) {
-                      timeline.stop();
-                      createGameOverPane();
-                    }
-                    repaintPane();
-                  }
-                }),
-            new KeyFrame(Duration.millis(speed)));
-
-    if (snake.isSnakeAlive()) {
-      timeline.setCycleCount(Timeline.INDEFINITE);
-      timeline.play();
-    }
-  }
-
-  private int calcIndex(int row, int col) {
-    return row * gridSize + col;
-  }
-
-  private void repaintPane() {
-    for (int row = 0; row < gridSize; row++) {
-      for (int col = 0; col < gridSize; col++) {
-        CellButton cb = (CellButton) gamePane.getChildren().get(calcIndex(row, col));
-        if (snake.isSnakePosition(row, col)) {
-          cb.setStatus(SNAKE);
-        } else {
-          if (fruit.isFruitPosition(row, col)) {
-            cb.setStatus(FRUIT);
-
-          } else {
-            cb.setStatus(BOARD);
-          }
-        }
-      }
-    }
-  }
-
-  private GridPane createGamePane() {
+  /**
+   * Creates Game pane.
+   * @return
+   */
+  public GridPane createGamePane() {
     GridPane pane = new GridPane();
     for (int row = 0; row < gridSize; row++) {
       for (int col = 0; col < gridSize; col++) {
@@ -239,23 +129,10 @@ public class SnakeGameGUI extends Application {
     return pane;
   }
 
-  private void snakeEatsFruit() {
-    snake.eatFruit();
-    scoreValue.setText(Integer.toString(snake.getScore()));
-    fruit.generateRandomPosition();
-  }
-
-  private void restartGame() {
-    snake = new Snake(gridSize);
-    scoreValue.setText(Integer.toString(snake.getScore()));
-    pressedDir = NORTH;
-    fruit.generateRandomPosition();
-    startSnakeGame();
-  }
-
-  private void createGameOverPane() {
-    Stage gameOverStage = new Stage();
-    BorderPane gameOverScreen = new BorderPane();
+  /**
+   * Creates game over pane.
+   */
+  public void drawGameOverPane(BorderPane gameOverScreen, Button restart, Button quit) {
     gameOverScreen.setPrefHeight(500);
     gameOverScreen.setPrefWidth(500);
     Label gameOver = new Label("Game Over!");
@@ -264,43 +141,16 @@ public class SnakeGameGUI extends Application {
     gameOverScreen.setCenter(gameOver);
     gameOverScreen.setPadding(new Insets(0, 0, 10, 0));
 
-    Button restart = new Button("New Game");
-    Button quit = new Button("Exit Game");
     HBox buttonBoxGameOver = new HBox(3.0);
     buttonBoxGameOver.getChildren().addAll(restart, quit);
     gameOverScreen.setBottom(buttonBoxGameOver);
     buttonBoxGameOver.setAlignment(Pos.BOTTOM_CENTER);
-
-    gameOverStage.setTitle("Game Over!");
-    gameOverStage.setScene(new Scene(gameOverScreen, 380, 200));
-    gameOverStage.show();
-
-    gameOverStage.setOnCloseRequest(
-        new EventHandler<WindowEvent>() {
-          @Override
-          public void handle(WindowEvent we) {
-            Platform.exit();
-            System.exit(0);
-          }
-        });
-
-    /** Exit the game. */
-    quit.setOnAction(
-        (ActionEvent e) -> {
-          Platform.exit();
-          System.exit(0);
-        });
-    /** Start the new game. */
-    restart.setOnAction(
-        (ActionEvent e) -> {
-          gameOverStage.close();
-          restartGame();
-        });
   }
 
-  private void createMenuPane() {
-    Stage menuStage = new Stage();
-    BorderPane menuScreen = new BorderPane();
+  /**
+   * Creates Menu pane.
+   */
+  public void drawMenuPane(BorderPane menuScreen, Button restart, Button quit, Button help) {
     menuScreen.setPrefHeight(500);
     menuScreen.setPrefWidth(500);
     Label gameOver = new Label("Menu");
@@ -309,47 +159,15 @@ public class SnakeGameGUI extends Application {
     menuScreen.setCenter(gameOver);
     menuScreen.setPadding(new Insets(0, 0, 10, 0));
 
-    Button restart = new Button("New Game");
-    Button quit = new Button("Exit Game");
-    Button help = new Button("Help");
     VBox buttonBoxGameOver = new VBox(3.0);
     buttonBoxGameOver.getChildren().addAll(restart, quit, help);
     menuScreen.setBottom(buttonBoxGameOver);
     buttonBoxGameOver.setAlignment(Pos.BOTTOM_CENTER);
-
-    menuStage.setTitle("Menu");
-    menuStage.setScene(new Scene(menuScreen, 380, 200));
-    menuStage.show();
-
-    menuStage.setOnCloseRequest(
-        new EventHandler<WindowEvent>() {
-          @Override
-          public void handle(WindowEvent we) {
-            Platform.exit();
-            System.exit(0);
-          }
-        });
-
-    /** Exit the game. */
-    quit.setOnAction(
-        (ActionEvent e) -> {
-          Platform.exit();
-          System.exit(0);
-        });
-    /** Start the new game. */
-    restart.setOnAction(
-        (ActionEvent e) -> {
-          menuStage.close();
-          restartGame();
-        });
-
-    help.setOnAction(
-        (ActionEvent e) -> {
-          menuStage.close();
-          createHelpPane();
-        });
   }
 
+  /**
+   * Creates Help pane with instructions how to play.
+   */
   public void createHelpPane() {
     Stage helpStage = new Stage();
     BorderPane helpScreen = new BorderPane();

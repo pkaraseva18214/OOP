@@ -7,6 +7,5 @@ import ru.nsu.fit.karaseva.snake.view.SnakeGameGUI;
 public class App {
 
   public static void main(String[] args) {
-    Application.launch(SnakeGameGUI.class, args);
-  }
+    Application.launch(Controller.class, args);  }
 }
