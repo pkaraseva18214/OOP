@@ -1,31 +1,37 @@
 package ru.nsu.fit.karaseva.pizzeria;
 
 import java.io.File;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.IntStream;
 
-/** Class that represents a pizzeria. There are bakers and delivery workers. */
+/** Class that represents a pizzeria. There are bakers and delivery workers.
+ * It's where the work starts: orders received, employees starts their work and finish it.
+ * Then pizzeria will be closed.*/
 public class Pizzeria {
-  private static int waitingTimeMilliseconds = 3000;
+  private static int waitingTimeMilliseconds;
   private final Employees employees;
   private final Bakers bakers;
   private final DeliveryWorkers deliveryWorkers;
   private final PizzeriaOverview pizzeriaOverview;
-  private final IncomingOrders incomingOrders;
-  private final Storage storage;
+  private final LinkedBlockingQueue<Order> waitingOrders;
+ // private final Storage storage;
+  private ArrayBlockingQueue<Order> itemsInStorage;
 
   /**
    * Constructor of Pizzeria Class.
    * @param employeesParameters file that has list of staff.
-   * @param storageIn storage of cooked pizzas.
+   * @param itemsInStorage storage of cooked pizzas.
    */
-  public Pizzeria(File employeesParameters, int storageIn) {
+  public Pizzeria(File employeesParameters, ArrayBlockingQueue<Order> itemsInStorage, LinkedBlockingQueue<Order> waitingOrders) {
     JSONReader reader = new JSONReader();
     employees = reader.readParameters(employeesParameters);
     bakers = new Bakers();
     deliveryWorkers = new DeliveryWorkers();
     pizzeriaOverview = new PizzeriaOverview();
-    storage = new Storage(storageIn);
-    incomingOrders = new IncomingOrders();
+    this.itemsInStorage = itemsInStorage;
+    this.waitingOrders = waitingOrders;
+    setWainingTime(3000);
   }
 
   /**
@@ -34,28 +40,34 @@ public class Pizzeria {
    * @return the pizzaRestaurantHeadquarters object
    */
   public PizzeriaOverview start(int numberOfOrders) {
-    bakers.run(employees, storage, incomingOrders, pizzeriaOverview);
-    deliveryWorkers.run(employees, storage, pizzeriaOverview);
-    IntStream.range(0, numberOfOrders).forEach(i -> order());
+    bakers.run(employees, itemsInStorage, waitingOrders, pizzeriaOverview);
+    deliveryWorkers.run(employees, itemsInStorage, pizzeriaOverview);
+    IntStream.range(0, numberOfOrders).forEach(i -> {
+      try {
+        order();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    });
     closePizzeria();
     return pizzeriaOverview;
   }
 
-  private void order() {
+  private void order() throws InterruptedException {
     System.out.println("Order #" + pizzeriaOverview.getCurrentOrderId() + ".");
 
     Order order = new Order(pizzeriaOverview.getCurrentOrderId());
     pizzeriaOverview.updateCurrentOrderId();
-    incomingOrders.order(order);
+    waitingOrders.put(order);
   }
 
   private void closePizzeria() {
     pizzeriaOverview.closePizzeria();
 
-    while (!incomingOrders.areThereAnyOrders()) {
+    while (!waitingOrders.isEmpty()) {
       try {
         Thread.sleep(waitingTimeMilliseconds);
-      } catch (InterruptedException e) {  //возникнет, если какой-то другой поток прервет работу данного потока.
+      } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }

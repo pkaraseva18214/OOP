@@ -1,19 +1,21 @@
 package ru.nsu.fit.karaseva.pizzeria;
 
 import com.fasterxml.jackson.annotation.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * Class that represents work of the baker in pizzeria.
- */
+/** Class that represents work of the baker in pizzeria. */
 public class Baker implements Runnable {
   private final int id;
   private final int cookingTime;
   private boolean waitingForOrder;
 
-  private Storage storage;
-  private IncomingOrders incomingOrders;
+  private LinkedBlockingQueue<Order> waitingOrders;
+  //private Storage storage;
+ // private IncomingOrders incomingOrders;
   private PizzeriaOverview pizzeriaOverview;
   private Bakers bakers;
+  private ArrayBlockingQueue<Order> itemsInStorage;
 
   Baker(@JsonProperty("id") int id, @JsonProperty("cookingTime") int cookingTime) {
     this.id = id;
@@ -22,47 +24,26 @@ public class Baker implements Runnable {
   }
 
   /**
-   * Returns id of the baker.
-   * @return id of the baker
-   */
-  int getId() {
-    return id;
-  }
-
-  /**
-   * Returns cooking time of the baker.
-   * @return cooking time
-   */
-  int getCookingTime() {
-    return cookingTime;
-  }
-
-  /**
-   * Returns waiting status of the baker.
-   * @return true - if baker is waiting for order, otherwise false.
-   */
-  boolean isWaitingForOrder() {
-    return waitingForOrder;
-  }
-
-  /**
    * Sets storage of cooked pizzas.
-   * @param storage - storage of cooked pizzas.
+   *
+   * @param itemsInStorage - storage of cooked pizzas.
    */
-  void setStorage(Storage storage) {
-    this.storage = storage;
+  void setStorage(ArrayBlockingQueue<Order> itemsInStorage) {
+    this.itemsInStorage = itemsInStorage;
   }
 
   /**
    * Sets incoming orders for bakers.
-   * @param incomingOrders
+   *
+   * @param waitingOrders
    */
-  void setIncomingOrders(IncomingOrders incomingOrders) {
-    this.incomingOrders = incomingOrders;
+  void setIncomingOrders(LinkedBlockingQueue<Order> waitingOrders) {
+    this.waitingOrders = waitingOrders;
   }
 
   /**
    * Sets overview of the pizzeria.
+   *
    * @param pizzeriaOverview
    */
   void setPizzeriaOverview(PizzeriaOverview pizzeriaOverview) {
@@ -71,6 +52,7 @@ public class Baker implements Runnable {
 
   /**
    * Sets bakers of the pizzeria.
+   *
    * @param bakers
    */
   void setBakers(Bakers bakers) {
@@ -80,20 +62,25 @@ public class Baker implements Runnable {
   @Override
   public void run() {
 
-    while (!pizzeriaOverview.isRestaurantClosed()
-        || !incomingOrders.areThereAnyOrders()) {
+    while (!pizzeriaOverview.isRestaurantClosed() || !waitingOrders.isEmpty()) {
 
-      Order currentOrder;
+      Order currentOrder = null;
+      try {
+        currentOrder = waitingOrders.take();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      ;
 
       try {
         this.waitingForOrder = true;
         bakers.lock.lock();
-        if (pizzeriaOverview.isRestaurantClosed() && incomingOrders.areThereAnyOrders()) {
+        if (pizzeriaOverview.isRestaurantClosed() && waitingOrders.isEmpty()) {
           break;
         }
-        currentOrder = incomingOrders.takeOrder();
+
         this.waitingForOrder = false;
-        try{
+        try {
           Thread.sleep(cookingTime);
         } catch (InterruptedException e) {
           e.printStackTrace();
@@ -106,16 +93,27 @@ public class Baker implements Runnable {
           "Baker #" + id + " is making a pizza. Order #" + currentOrder.getId() + ".");
 
       System.out.println(
-          "Baker #"
-              + id
-              + " finished making a pizza. Order #"
-              + currentOrder.getId()
-              + ".");
+          "Baker #" + id + " finished making a pizza. Order #" + currentOrder.getId() + ".");
       System.out.println("Baker #" + id + " put pizza in the storage.");
-      storage.putItemAwayInStorage(currentOrder);
+      try {
+        itemsInStorage.put(currentOrder);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
     pizzeriaOverview.endShiftForBaker();
     System.out.println("Baker #" + id + " finished his work for today.");
   }
 
+  public boolean isWaitingForOrder() {
+    return waitingForOrder;
+  }
+
+  public int getId(){
+    return id;
+  }
+
+  public int getCookingTime(){
+    return cookingTime;
+  }
 }

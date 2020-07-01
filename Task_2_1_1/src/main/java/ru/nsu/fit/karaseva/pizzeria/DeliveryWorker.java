@@ -4,22 +4,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
-/**
- * Class that represents work of the delivery worker in pizzeria.
- */
+/** Class that represents work of the delivery worker in pizzeria. */
 public class DeliveryWorker implements Runnable {
-  private static int WAITING_TIME = 1000;
+  private static final int WAITING_TIME = 1000;
   private final int id;
   private final int capacity;
   private final int deliveryTime;
 
   private final List<Order> bag;
-  private Storage storage;
+  private ArrayBlockingQueue<Order> itemsInStorage;
   private PizzeriaOverview pizzeriaOverview;
   private DeliveryWorkers deliveryWorkers;
 
-  DeliveryWorker(
+  public DeliveryWorker(
       @JsonProperty("id") int id,
       @JsonProperty("deliveryTime") int deliveryTime,
       @JsonProperty("capacity") int capacity) {
@@ -31,34 +31,37 @@ public class DeliveryWorker implements Runnable {
 
   /**
    * Returns id of the delivery worker.
+   *
    * @return
    */
-  int getId() {
+  public int getId() {
     return id;
   }
 
   /**
    * Returns delivery time of the delivery worker.
+   *
    * @return
    */
-  int getDeliveryTime() {
+  public int getDeliveryTime() {
     return deliveryTime;
   }
 
   /**
    * Returns capacity of the delivery worker's bag.
+   *
    * @return
    */
-  int getCapacity() {
+  public int getCapacity() {
     return capacity;
   }
 
   /**
    * Set storage of cooked pizzas.
-   * @param storage
+   * @param itemsInStorage
    */
-  void setStorage(Storage storage) {
-    this.storage = storage;
+  void setStorage(ArrayBlockingQueue<Order> itemsInStorage) {
+    this.itemsInStorage = itemsInStorage;
   }
 
   /**
@@ -71,6 +74,7 @@ public class DeliveryWorker implements Runnable {
 
   /**
    * Sets delivery workers.
+   *
    * @param deliveryWorkers
    */
   void setDeliveryWorkers(DeliveryWorkers deliveryWorkers) {
@@ -80,14 +84,12 @@ public class DeliveryWorker implements Runnable {
   @Override
   public void run() {
     while (!pizzeriaOverview.isRestaurantClosed()
-        || !(storage.numOfItemsInStorage() == 0
-        && pizzeriaOverview.areAllBakersFinishedWork())) {
+        || !(itemsInStorage.size() == 0 && pizzeriaOverview.areAllBakersFinishedWork())) {
 
-      boolean isClosed = false;
       deliveryWorkers.lock.lock();
       try {
         if (pizzeriaOverview.isRestaurantClosed()
-            && storage.numOfItemsInStorage() == 0
+            && itemsInStorage.size() == 0
             && pizzeriaOverview.areAllBakersFinishedWork()) {
           break;
         }
@@ -95,7 +97,7 @@ public class DeliveryWorker implements Runnable {
           Order order = null;
           if (bag.size() != 0) {
             try {
-              order = storage.pickItemForDelivery(WAITING_TIME);
+              order = itemsInStorage.poll(WAITING_TIME, TimeUnit.MILLISECONDS);
               if (order == null) {
                 System.out.println(
                     "Delivery Worker #"
@@ -118,20 +120,20 @@ public class DeliveryWorker implements Runnable {
           } else {
             while (bag.size() == 0) {
               if (pizzeriaOverview.isRestaurantClosed()
-                  && storage.numOfItemsInStorage() == 0
+                  && itemsInStorage.size() == 0
                   && pizzeriaOverview.areAllBakersFinishedWork()) {
 
                 System.out.println("We are closed!");
 
-                isClosed = true;
+                pizzeriaOverview.closePizzeria();
                 break;
               }
-              order = storage.pickItemForDelivery(WAITING_TIME);
+              order = itemsInStorage.poll(WAITING_TIME, TimeUnit.MILLISECONDS);
               if (order != null) {
                 bag.add(order);
               }
             }
-            if (isClosed) {
+            if (pizzeriaOverview.isRestaurantClosed()){
               break;
             }
             System.out.println(
@@ -149,7 +151,7 @@ public class DeliveryWorker implements Runnable {
       } finally {
         deliveryWorkers.lock.unlock();
       }
-      if (isClosed) {
+      if (pizzeriaOverview.isRestaurantClosed()) {
         break;
       }
       try {

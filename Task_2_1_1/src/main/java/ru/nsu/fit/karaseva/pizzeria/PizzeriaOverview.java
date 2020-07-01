@@ -1,5 +1,7 @@
 package ru.nsu.fit.karaseva.pizzeria;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Class represents important data for pizzeria.
  */
@@ -8,7 +10,7 @@ public class PizzeriaOverview {
   private int numOfBakers;
   private int numOfDeliveryWorkers;
   private int numOfBakersFinishedWork;
-  private int numOfDeliveryWorkersFinishedWork;
+  private AtomicInteger numOfDeliveryWorkersFinishedWork;
   private boolean pizzeriaIsClosed;
 
   /**
@@ -17,7 +19,7 @@ public class PizzeriaOverview {
   public PizzeriaOverview() {
     currentOrderId = 0;
     numOfBakersFinishedWork = 0;
-    numOfDeliveryWorkersFinishedWork = 0;
+    numOfDeliveryWorkersFinishedWork = new AtomicInteger(0);
     pizzeriaIsClosed = false;
   }
 
@@ -42,7 +44,7 @@ public class PizzeriaOverview {
    * @return true if all delivery workers finished their work.
    */
   public boolean areAllDeliveryWorkersFinishedWork() {
-    return numOfDeliveryWorkers == numOfDeliveryWorkersFinishedWork;
+    return numOfDeliveryWorkers == numOfDeliveryWorkersFinishedWork.get();
   }
 
   /**
@@ -64,7 +66,7 @@ public class PizzeriaOverview {
    * Sets number of bakers.
    * @param numOfBakers
    */
-  void setNumberOfBakers(int numOfBakers) {
+  public void setNumberOfBakers(int numOfBakers) {
     this.numOfBakers = numOfBakers;
   }
 
@@ -72,7 +74,7 @@ public class PizzeriaOverview {
    * Sets number of delivery workers.
    * @param numOfDeliveryWorkers
    */
-  void setNumberOfDeliveryWorkers(int numOfDeliveryWorkers) {
+  public void setNumberOfDeliveryWorkers(int numOfDeliveryWorkers) {
     this.numOfDeliveryWorkers = numOfDeliveryWorkers;
   }
 
@@ -87,14 +89,16 @@ public class PizzeriaOverview {
    * Ends shift for delivery worker.
    */
   void endShiftForDeliveryWorker() {
-    numOfDeliveryWorkersFinishedWork++;
+    numOfDeliveryWorkersFinishedWork.incrementAndGet();
   }
 
   /**
    * Set status of pizzeria as closed.
    */
-  void closePizzeria() {
-    pizzeriaIsClosed = true;
+  public void closePizzeria() {
+    synchronized (this) {
+      pizzeriaIsClosed = true;
+    }
   }
 
 }

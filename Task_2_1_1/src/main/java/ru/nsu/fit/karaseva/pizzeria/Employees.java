@@ -1,16 +1,15 @@
 package ru.nsu.fit.karaseva.pizzeria;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.List;
 
-/**
- * Class that represents staff in pizzeria.
- */
+/** Class that represents staff in pizzeria. */
 public class Employees {
-  private final List<Baker> bakers;
+  public final List<Baker> bakers;
   private final List<DeliveryWorker> deliveryWorkers;
 
-  Employees(
+  public Employees(
       @JsonProperty("bakers") List<Baker> bakers,
       @JsonProperty("deliveryWorkers") List<DeliveryWorker> deliveryWorkers) {
 
@@ -20,35 +19,36 @@ public class Employees {
 
   /**
    * Returns number of bakers.
+   *
    * @return
    */
-  int getNumberOfBakers(){
+  public int getNumberOfBakers() {
     return bakers.size();
   }
 
   /**
    * Returns number of delivery workers.
+   *
    * @return
    */
-  int getNumberOfDeliveryWorkers(){
+  public int getNumberOfDeliveryWorkers() {
     return deliveryWorkers.size();
   }
 
   /**
-   * Returns baker.
-   * @param i - number of barker.
+   * Returns list of bakers.
    * @return
    */
-  Baker getBaker(int i){
-    return bakers.get(i);
+  public List<Baker> getBakers() {
+    return Collections.unmodifiableList(bakers);
   }
 
   /**
-   * Returns delivery worker.
-   * @param i - number of delivery worker.
+   * Returns list of delivery workers.
    * @return
    */
-  DeliveryWorker getDeliveryWorker(int i){
-    return deliveryWorkers.get(i);
+  public List<DeliveryWorker> getDeliveryWorkers() {
+    return Collections.unmodifiableList(deliveryWorkers);
   }
+
 }

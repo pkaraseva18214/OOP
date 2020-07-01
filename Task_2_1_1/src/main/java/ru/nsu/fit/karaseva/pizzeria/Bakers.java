@@ -2,8 +2,10 @@ package ru.nsu.fit.karaseva.pizzeria;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -22,19 +24,18 @@ class Bakers {
 
   void run(
       Employees employees,
-      Storage storage,
-      IncomingOrders incomingOrders,
+      ArrayBlockingQueue<Order> itemsInStorage,
+      LinkedBlockingQueue<Order> waitingOrders,
       PizzeriaOverview pizzeriaOverview) {
 
     pizzeriaOverview.setNumberOfBakers(employees.getNumberOfBakers());
     ExecutorService executorService = Executors.newFixedThreadPool(employees.getNumberOfBakers());
 
-    int o = 0;
-    for (Baker baker = employees.getBaker(o); o < employees.getNumberOfBakers(); o++) {
+    for (Baker baker : employees.bakers) {
       baker.setBakers(this);
       baker.setPizzeriaOverview(pizzeriaOverview);
-      baker.setStorage(storage);
-      baker.setIncomingOrders(incomingOrders);
+      baker.setStorage(itemsInStorage);
+      baker.setIncomingOrders(waitingOrders);
 
       bakersAndPizzas.add(new FutureObjectPair(baker, executorService.submit(baker)));
     }
