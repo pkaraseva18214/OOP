@@ -5,7 +5,7 @@ import ru.nsu.fit.karaseva.snake.view.SnakeGameGUI;
 
 @SuppressWarnings("restriction")
 public class App {
-
   public static void main(String[] args) {
-    Application.launch(Controller.class, args);  }
+    Application.launch(SnakeGameGUI.class, args);
+  }
 }

@@ -1,37 +1,30 @@
 package ru.nsu.fit.karaseva.snake.model;
 
-import static ru.nsu.fit.karaseva.snake.model.Direction.NORTH;
-
 import java.util.concurrent.ThreadLocalRandom;
 
 /** The Fruit represents a small object that can be eaten by a Snake */
 public class Fruit {
-
   private Position pos;
-  private final Snake snake;
+  private Field field;
 
-  public Fruit(Snake snake) {
-    this.snake = snake;
+  public Fruit(Field field) {
+    this.field = field;
   }
 
   /** Generates a random Position for the fruit. */
-  public void generateRandomPosition() {
+  public void generateRandomPosition() throws InvalidPositionException {
     int min = 0;
-    int max = snake.getFieldSize() - 1;
+    int max = field.getFieldSize() - 1;
     int x = ThreadLocalRandom.current().nextInt(min, max + 1);
     int y = ThreadLocalRandom.current().nextInt(min, max + 1);
-
-    if (snake.isSnakePosition(x, y)) {
+    Position p = new Position(x, y);
+    if (!field.isCellEmpty(p)) {
       generateRandomPosition();
     } else {
-      try {
-        pos = new Position(x, y, NORTH);
-      } catch (InvalidSnakePositionException e) {
-        e.printStackTrace();
-      }
+      pos = p;
+      field.occupyCell(pos, 2);
     }
   }
-
   /**
    * Determines whether a fruit is set on the given position.
    *
@@ -44,5 +37,9 @@ public class Fruit {
       return pos.getX() == x && pos.getY() == y;
     }
     return false;
+  }
+
+  public Position getFruitPosition(){
+    return pos;
   }
 }

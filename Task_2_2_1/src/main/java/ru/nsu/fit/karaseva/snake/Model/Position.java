@@ -5,58 +5,33 @@ package ru.nsu.fit.karaseva.snake.model;
  * certain position that can be represented with this class.
  */
 public class Position {
-
   private int row;
   private int col;
-  private Direction direction;
-
-  /**
-   * Constructor to make a position.
-   *
-   * @param row The row or x value of the position
-   * @param col The col or y value of the position
-   * @param direction The direction of the position
-   * @throws InvalidSnakePositionException when row or col are negative
-   */
-  public Position(int row, int col, Direction direction) throws InvalidSnakePositionException {
-    this(row, col);
-    this.direction = direction;
-  }
 
   /**
    * Constructor to make a position with default direction being NORTH.
    *
    * @param row The row or x value of the position
    * @param col The col or y value of the position
-   * @throws InvalidSnakePositionException when row or col are negative
+   * @throws InvalidPositionException when row or col are negative
    */
-  public Position(int row, int col) throws InvalidSnakePositionException {
+  public Position(int row, int col) throws InvalidPositionException {
     if (row >= 0 && col >= 0) {
       this.row = row;
       this.col = col;
-      this.direction = Direction.NORTH;
     } else {
-      throw new InvalidSnakePositionException(
+      throw new InvalidPositionException(
           String.format("Value x{%s} and y{%s} must be greater than 0", row, col));
     }
   }
-
   /**
    * Creates a position out of a given position with the same values.
    *
    * @param pos The position from which to take the values for a new position
-   * @throws InvalidSnakePositionException when row or col are negative
+   * @throws InvalidPositionException when row or col are negative
    */
-  public Position(Position pos) throws InvalidSnakePositionException {
-    this(pos.getX(), pos.getY(), pos.getDirection());
-  }
-
-  public Direction getDirection() {
-    return direction;
-  }
-
-  public void setDirection(Direction dir) {
-    direction = dir;
+  public Position(Position pos) throws InvalidPositionException {
+    this(pos.getX(), pos.getY());
   }
 
   public int getX() {

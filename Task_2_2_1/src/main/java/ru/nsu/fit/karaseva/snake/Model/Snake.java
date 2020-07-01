@@ -8,41 +8,35 @@ import java.util.LinkedList;
  * do any actions related to the game Snake.
  */
 public class Snake {
-
   private LinkedList<Position> snakeBody;
   private final int fieldSize;
   private boolean snakeAlive = true;
   private int score;
   private int death = 20;
-
+  private Direction direction;
+  private Field field;
   /**
    * Creates a snake that can crawl in a fixed sized field of size max.
    *
    * @param max The maximum field size in which the snake can crawl
    */
-  public Snake(int max) {
+  public Snake(int max, Field field) throws InvalidPositionException {
+    this.field = field;
     snakeBody = new LinkedList<>();
     fieldSize = max;
     score = 0;
-
-    int posX = max / 2;
-    int posY = posX;
-    try {
-      snakeBody.add(new Position(posX, posY++, NORTH));
-      snakeBody.add(new Position(posX, posY, NORTH));
-    } catch (InvalidSnakePositionException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public int getFieldSize() {
-    return fieldSize;
+    Position p1 = new Position(max / 2, max / 2);
+    Position p2 = new Position(max / 2, max / 2 + 1);
+    snakeBody.add(p2);
+    snakeBody.add(p1);
+    field.occupyCell(p1, 1);
+    field.occupyCell(p2, 1);
+    direction = NORTH;
   }
 
   public boolean isSnakeAlive() {
     return snakeAlive;
   }
-
   /**
    * Checks whether the snake has a body element at this position.
    *
@@ -60,7 +54,6 @@ public class Snake {
     }
     return hasThisPosition;
   }
-
   /**
    * Checks whether the snake head has the same position as a fruit.
    *
@@ -68,11 +61,8 @@ public class Snake {
    * @return true, if the snake head touched the fruit
    */
   public boolean snakeReachedFruit(Fruit fruit) {
-    int headX = snakeBody.getFirst().getX();
-    int headY = snakeBody.getFirst().getY();
-    return fruit.isFruitPosition(headX, headY);
+    return fruit.isFruitPosition(snakeBody.getFirst().getX(), snakeBody.getFirst().getY());
   }
-
   /**
    * Performs action that is taken, when a fruit is eaten: Adding body elements to the snakebody
    * with the same direction as the last body element depending on the fruit value.
@@ -80,33 +70,32 @@ public class Snake {
   public void eatFruit() {
     try {
       Position lastPos = snakeBody.getLast();
-      Direction dir = lastPos.getDirection();
-      Position pos = new Position(lastPos.getX(), lastPos.getY(), dir);
+      Position pos = new Position(lastPos.getX(), lastPos.getY());
       snakeBody.add(pos);
+      field.occupyCell(pos, 1);
       score++;
-    } catch (InvalidSnakePositionException e) {
+    } catch (InvalidPositionException e) {
       e.printStackTrace();
     }
   }
-
   /** Snake moves one position in the direction the head is pointing to. */
   public void move() {
     if (snakeAlive) {
+      field.freeCell(snakeBody.getLast());
       snakeBody.removeLast();
       Position head = getNextPosition(snakeBody.getFirst());
       snakeBody.addFirst(head);
+      field.occupyCell(head, 1);
     }
   }
-
   /**
    * Changes the direction the snake is facing.
    *
    * @param dir The new direction the snake should face
    */
   public void setNewDirection(Direction dir) {
-    snakeBody.getFirst().setDirection(dir);
+    direction = dir;
   }
-
   /**
    * Checks if the snake is still alive and that thus the game has not yet ended. Snake must not run
    * out of field or over itself to be alive
@@ -116,11 +105,9 @@ public class Snake {
   public boolean isGameOver() {
     return snakeRanOutOfField() || snakeRanOverItself() || isMaxLength();
   }
-
   private boolean isMaxLength(){
     return (snakeBody.size() - 2 >= death);
   }
-
   /**
    * Checks if the snake is still in the valid borders of the field.
    *
@@ -139,7 +126,6 @@ public class Snake {
     }
     return false;
   }
-
   private boolean snakeRanOverItself() {
     Position head = snakeBody.getFirst();
     for (int i = 1; i < snakeBody.size(); i++) {
@@ -150,7 +136,6 @@ public class Snake {
     }
     return false;
   }
-
   /**
    * Updates a given Position of the snake according to the direction it is going.
    *
@@ -160,22 +145,20 @@ public class Snake {
     Position newPos = null;
     try {
       newPos = new Position(pos);
-    } catch (InvalidSnakePositionException e) {
+      field.occupyCell(pos, 1);
+    } catch (InvalidPositionException e) {
       e.printStackTrace();
     }
-    switch (pos.getDirection()) {
+    switch (direction) {
       case NORTH:
         newPos.decreaseCol();
         break;
-
       case SOUTH:
         newPos.increaseCol();
         break;
-
       case WEST:
         newPos.decreaseRow();
         break;
-
       case EAST:
         newPos.increaseRow();
         break;
@@ -184,9 +167,7 @@ public class Snake {
     }
     return newPos;
   }
-
   public int getScore() {
     return score;
   }
-
 }
