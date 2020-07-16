@@ -1,18 +1,23 @@
 package ru.nsu.fit.karaseva.pizzeria;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.junit.Assert;
 import org.junit.Test;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class DataTest {
   @Test
   public void correctlyReadData(){
     JSONReader jsonReader = new JSONReader();
-    File employeesParameters = new File("src/main/resources/input");
-    Employees employees = jsonReader.readParameters(employeesParameters);
+    File deliveryFile = new File("src/main/resources/input");
+    File bakerFile = new File("src/main/resources/baker");
+    Employees employees = new Employees(jsonReader.readBakers(bakerFile), jsonReader.readDeliveryWorkers(deliveryFile));
 
     Assert.assertEquals(3, employees.getNumberOfBakers());
     Assert.assertEquals(1, employees.getBakers().get(0).getId());
@@ -30,16 +35,18 @@ public class DataTest {
 
   @Test
   public void correctlyReadAndInterpretedData(){
-    ArrayBlockingQueue<Order> itemsInStorage = new ArrayBlockingQueue<Order>(9);
+    ArrayBlockingQueue<Order> itemsInStorage = new ArrayBlockingQueue<>(9);
     PizzeriaOverview pizzeriaOverview = new PizzeriaOverview();
-    LinkedBlockingQueue<Order> waitingOrders = new LinkedBlockingQueue<Order>();
+    LinkedBlockingQueue<Order> waitingOrders = new LinkedBlockingQueue<>();
     DeliveryWorkers deliveryWorkers = new DeliveryWorkers();
     Bakers bakers = new Bakers();
     int numberOfBakers = 0;
 
     JSONReader jsonReader = new JSONReader();
-    File employeesParameters = new File("src/main/resources/input");
-    Employees employees = jsonReader.readParameters(employeesParameters);
+    File deliveryFile = new File("src/main/resources/input");
+    File bakerFile = new File("src/main/resources/baker");
+    Employees employees = new Employees(jsonReader.readBakers(bakerFile), jsonReader.readDeliveryWorkers(deliveryFile));
+
 
     deliveryWorkers.run(employees, itemsInStorage, pizzeriaOverview);
     bakers.run(employees, itemsInStorage, waitingOrders, pizzeriaOverview);
@@ -51,5 +58,14 @@ public class DataTest {
     }
     Assert.assertEquals(3, numberOfBakers);
     Assert.assertEquals(3, deliveryWorkers.getOrders().size());
+  }
+
+  @Test
+  public void testt() throws IOException {
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    File file = new File("src/main/resources/baker");
+
+    List<BakerConfig> car = Arrays.asList(objectMapper.readValue(file, BakerConfig[].class));
   }
 }

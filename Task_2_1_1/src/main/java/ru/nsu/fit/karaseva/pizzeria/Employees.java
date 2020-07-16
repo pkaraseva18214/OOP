@@ -1,54 +1,50 @@
 package ru.nsu.fit.karaseva.pizzeria;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /** Class that represents staff in pizzeria. */
 public class Employees {
-  public final List<Baker> bakers;
-  private final List<DeliveryWorker> deliveryWorkers;
+  public List<Baker> bakers;
+  private List<DeliveryWorker> deliveryWorkers;
 
-  public Employees(
-      @JsonProperty("bakers") List<Baker> bakers,
-      @JsonProperty("deliveryWorkers") List<DeliveryWorker> deliveryWorkers) {
-
-    this.bakers = bakers;
-    this.deliveryWorkers = deliveryWorkers;
+  public Employees(List<BakerConfig> bakerConfigs, List<DeliveryWorkerConfig> deliveryWorkersConfig) {
+    bakers = new LinkedList<>();
+    for(BakerConfig bakerConfig : bakerConfigs){
+      bakers.add(new Baker(bakerConfig));
+    }
+    deliveryWorkers = new LinkedList<>();
+    for(DeliveryWorkerConfig deliveryWorkerConfig : deliveryWorkersConfig){
+      deliveryWorkers.add(new DeliveryWorker(deliveryWorkerConfig));
+    }
   }
 
   /**
-   * Returns number of bakers.
-   *
-   * @return
+   * @return number of bakers.
    */
   public int getNumberOfBakers() {
     return bakers.size();
   }
 
   /**
-   * Returns number of delivery workers.
-   *
-   * @return
+   * @return number of delivery workers.
    */
   public int getNumberOfDeliveryWorkers() {
     return deliveryWorkers.size();
   }
 
   /**
-   * Returns list of bakers.
-   * @return
+   * @return list of bakers.
    */
   public List<Baker> getBakers() {
     return Collections.unmodifiableList(bakers);
   }
 
   /**
-   * Returns list of delivery workers.
-   * @return
+   * @return list of delivery workers.
    */
   public List<DeliveryWorker> getDeliveryWorkers() {
     return Collections.unmodifiableList(deliveryWorkers);
   }
-
 }

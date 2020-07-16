@@ -15,17 +15,18 @@ public class Pizzeria {
   private final DeliveryWorkers deliveryWorkers;
   private final PizzeriaOverview pizzeriaOverview;
   private final LinkedBlockingQueue<Order> waitingOrders;
- // private final Storage storage;
   private ArrayBlockingQueue<Order> itemsInStorage;
 
   /**
-   * Constructor of Pizzeria Class.
-   * @param employeesParameters file that has list of staff.
-   * @param itemsInStorage storage of cooked pizzas.
+   *
+   * @param bakerFile
+   * @param deliveryFile
+   * @param itemsInStorage
+   * @param waitingOrders
    */
-  public Pizzeria(File employeesParameters, ArrayBlockingQueue<Order> itemsInStorage, LinkedBlockingQueue<Order> waitingOrders) {
-    JSONReader reader = new JSONReader();
-    employees = reader.readParameters(employeesParameters);
+  public Pizzeria(File bakerFile, File deliveryFile, ArrayBlockingQueue<Order> itemsInStorage, LinkedBlockingQueue<Order> waitingOrders) {
+    JSONReader jsonReader = new JSONReader();
+    employees = new Employees(jsonReader.readBakers(bakerFile), jsonReader.readDeliveryWorkers(deliveryFile));
     bakers = new Bakers();
     deliveryWorkers = new DeliveryWorkers();
     pizzeriaOverview = new PizzeriaOverview();
@@ -92,7 +93,7 @@ public class Pizzeria {
 
   /**
    * Give you opportunity to set waiting time in pizzeria.
-   * @param waitingTime
+   * @param waitingTime waiting time in pizzeria.
    */
   public void setWainingTime(int waitingTime){
     waitingTimeMilliseconds = waitingTime;

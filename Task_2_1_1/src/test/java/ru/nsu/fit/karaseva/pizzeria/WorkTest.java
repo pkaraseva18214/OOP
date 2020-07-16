@@ -10,18 +10,32 @@ public class WorkTest {
   @Test
   public void allDeliveryWorkersFinishedTheirWorkSuccessfully() {
     JSONReader jsonReader = new JSONReader();
-    File employeesParameters = new File("src/main/resources/input");
-    Employees employees = jsonReader.readParameters(employeesParameters);
+    File deliveryFile = new File("src/main/resources/input");
+    File bakerFile = new File("src/main/resources/baker");
+    Employees employees = new Employees(jsonReader.readBakers(bakerFile), jsonReader.readDeliveryWorkers(deliveryFile));
+
     Assert.assertEquals(3, employees.getNumberOfBakers());
     Assert.assertEquals(3, employees.getNumberOfDeliveryWorkers());
 
     DeliveryWorkers deliveryWorkers = new DeliveryWorkers();
     PizzeriaOverview pizzeriaOverview = new PizzeriaOverview();
-    ArrayBlockingQueue<Order> itemsInStorage = new ArrayBlockingQueue<Order>(9);
+    ArrayBlockingQueue<Order> itemsInStorage = new ArrayBlockingQueue<>(9);
 
-    DeliveryWorker deliveryWorker1 = new DeliveryWorker(1, 5000, 3);
-    DeliveryWorker deliveryWorker2 = new DeliveryWorker(2, 6000, 3);
-    DeliveryWorker deliveryWorker3 = new DeliveryWorker(3, 5000, 3);
+    DeliveryWorkerConfig dwc1 = new DeliveryWorkerConfig();
+    dwc1.setId(1);
+    dwc1.setDeliveryTime(5000);
+    dwc1.setCapacity(3);
+    DeliveryWorkerConfig dwc2 = new DeliveryWorkerConfig();
+    dwc2.setId(2);
+    dwc2.setDeliveryTime(6000);
+    dwc1.setCapacity(3);
+    DeliveryWorkerConfig dwc3 = new DeliveryWorkerConfig();
+    dwc3.setId(3);
+    dwc3.setDeliveryTime(5000);
+    dwc3.setCapacity(3);
+    DeliveryWorker deliveryWorker1 = new DeliveryWorker(dwc1);
+    DeliveryWorker deliveryWorker2 = new DeliveryWorker(dwc2);
+    DeliveryWorker deliveryWorker3 = new DeliveryWorker(dwc3);
     deliveryWorker1.setDeliveryWorkers(deliveryWorkers);
     deliveryWorker1.setPizzeriaOverview(pizzeriaOverview);
     deliveryWorker1.setStorage(itemsInStorage);
@@ -62,10 +76,11 @@ public class WorkTest {
 
   @Test
   public void pizzeriaAndAllStaffFinishedTheirWorkSuccessfully() {
-    File employeesParameters = new File("src/main/resources/input");
-    LinkedBlockingQueue<Order> waitingOrders = new LinkedBlockingQueue<Order>();
-    ArrayBlockingQueue<Order> itemsInStorage = new ArrayBlockingQueue<Order>(9);
-    Pizzeria pizzeria = new Pizzeria(employeesParameters, itemsInStorage, waitingOrders);
+    File deliveryFile = new File("src/main/resources/input");
+    File bakerFile = new File("src/main/resources/baker");
+    LinkedBlockingQueue<Order> waitingOrders = new LinkedBlockingQueue<>();
+    ArrayBlockingQueue<Order> itemsInStorage = new ArrayBlockingQueue<>(9);
+    Pizzeria pizzeria = new Pizzeria(bakerFile, deliveryFile, itemsInStorage, waitingOrders);
     PizzeriaOverview pizzeriaOverview = pizzeria.start(5);
 
     Assert.assertTrue(pizzeriaOverview.areAllBakersFinishedWork());
@@ -75,14 +90,23 @@ public class WorkTest {
 
   @Test
   public void allBakersFinishedTheirWorkSuccessfully() throws InterruptedException {
-    LinkedBlockingQueue<Order> waitingOrders = new LinkedBlockingQueue<Order>();
+    LinkedBlockingQueue<Order> waitingOrders = new LinkedBlockingQueue<>();
     Bakers bakers = new Bakers();
     PizzeriaOverview pizzeriaOverview = new PizzeriaOverview();
-    ArrayBlockingQueue<Order> itemsInStorage = new ArrayBlockingQueue<Order>(9);
+    ArrayBlockingQueue<Order> itemsInStorage = new ArrayBlockingQueue<>(9);
 
-    Baker baker1 = new Baker(1, 10000);
-    Baker baker2 = new Baker(2, 10000);
-    Baker baker3 = new Baker(3, 10000);
+    BakerConfig bakerConfig1 = new BakerConfig();
+    bakerConfig1.setId(1);
+    bakerConfig1.setCookingTime(10000);
+    BakerConfig bakerConfig2 = new BakerConfig();
+    bakerConfig2.setId(2);
+    bakerConfig2.setCookingTime(10000);
+    BakerConfig bakerConfig3 = new BakerConfig();
+    bakerConfig3.setId(3);
+    bakerConfig3.setCookingTime(10000);
+    Baker baker1 = new Baker(bakerConfig1);
+    Baker baker2 = new Baker(bakerConfig2);
+    Baker baker3 = new Baker(bakerConfig3);
     baker1.setBakers(bakers);
     baker1.setPizzeriaOverview(pizzeriaOverview);
     baker1.setStorage(itemsInStorage);

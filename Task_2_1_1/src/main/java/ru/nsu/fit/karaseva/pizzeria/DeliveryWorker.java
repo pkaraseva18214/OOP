@@ -19,13 +19,10 @@ public class DeliveryWorker implements Runnable {
   private PizzeriaOverview pizzeriaOverview;
   private DeliveryWorkers deliveryWorkers;
 
-  public DeliveryWorker(
-      @JsonProperty("id") int id,
-      @JsonProperty("deliveryTime") int deliveryTime,
-      @JsonProperty("capacity") int capacity) {
-    this.id = id;
-    this.deliveryTime = deliveryTime;
-    this.capacity = capacity;
+  public DeliveryWorker(DeliveryWorkerConfig deliveryWorkerConfig){
+    this.id = deliveryWorkerConfig.getId();
+    this.deliveryTime = deliveryWorkerConfig.getDeliveryTime();
+    this.capacity = deliveryWorkerConfig.getCapacity();
     this.bag = new ArrayList<>();
   }
 

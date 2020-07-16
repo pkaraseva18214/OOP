@@ -1,6 +1,5 @@
 package ru.nsu.fit.karaseva.pizzeria;
 
-import com.fasterxml.jackson.annotation.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -11,16 +10,26 @@ public class Baker implements Runnable {
   private boolean waitingForOrder;
 
   private LinkedBlockingQueue<Order> waitingOrders;
-  //private Storage storage;
- // private IncomingOrders incomingOrders;
   private PizzeriaOverview pizzeriaOverview;
   private Bakers bakers;
   private ArrayBlockingQueue<Order> itemsInStorage;
 
-  Baker(@JsonProperty("id") int id, @JsonProperty("cookingTime") int cookingTime) {
-    this.id = id;
-    this.cookingTime = cookingTime;
+  Baker(BakerConfig bakerConfig){
+    this.id = bakerConfig.getId();
+    this.cookingTime = bakerConfig.getCookingTime();
     waitingForOrder = false;
+  }
+
+  public boolean isWaitingForOrder() {
+    return waitingForOrder;
+  }
+
+  public int getId(){
+    return id;
+  }
+
+  public int getCookingTime(){
+    return cookingTime;
   }
 
   /**
@@ -103,17 +112,5 @@ public class Baker implements Runnable {
     }
     pizzeriaOverview.endShiftForBaker();
     System.out.println("Baker #" + id + " finished his work for today.");
-  }
-
-  public boolean isWaitingForOrder() {
-    return waitingForOrder;
-  }
-
-  public int getId(){
-    return id;
-  }
-
-  public int getCookingTime(){
-    return cookingTime;
   }
 }
