@@ -14,7 +14,7 @@ public class Baker implements Runnable {
   private Bakers bakers;
   private ArrayBlockingQueue<Order> itemsInStorage;
 
-  Baker(BakerConfig bakerConfig){
+  Baker(BakerConfig bakerConfig) {
     this.id = bakerConfig.getId();
     this.cookingTime = bakerConfig.getCookingTime();
     waitingForOrder = false;
@@ -24,47 +24,29 @@ public class Baker implements Runnable {
     return waitingForOrder;
   }
 
-  public int getId(){
+  public int getId() {
     return id;
   }
 
-  public int getCookingTime(){
+  public int getCookingTime() {
     return cookingTime;
   }
 
   /**
-   * Sets storage of cooked pizzas.
-   *
-   * @param itemsInStorage - storage of cooked pizzas.
+   * Sets storage, waiting orders, pizzeria overview and bakers.
+   * @param itemsInStorage storage
+   * @param waitingOrders waiting orders
+   * @param pizzeriaOverview pizzeria overview
+   * @param bakers bakers
    */
-  void setStorage(ArrayBlockingQueue<Order> itemsInStorage) {
+  public void setAdditionalParameters(
+      ArrayBlockingQueue<Order> itemsInStorage,
+      LinkedBlockingQueue<Order> waitingOrders,
+      PizzeriaOverview pizzeriaOverview,
+      Bakers bakers) {
     this.itemsInStorage = itemsInStorage;
-  }
-
-  /**
-   * Sets incoming orders for bakers.
-   *
-   * @param waitingOrders
-   */
-  void setIncomingOrders(LinkedBlockingQueue<Order> waitingOrders) {
     this.waitingOrders = waitingOrders;
-  }
-
-  /**
-   * Sets overview of the pizzeria.
-   *
-   * @param pizzeriaOverview
-   */
-  void setPizzeriaOverview(PizzeriaOverview pizzeriaOverview) {
     this.pizzeriaOverview = pizzeriaOverview;
-  }
-
-  /**
-   * Sets bakers of the pizzeria.
-   *
-   * @param bakers
-   */
-  void setBakers(Bakers bakers) {
     this.bakers = bakers;
   }
 

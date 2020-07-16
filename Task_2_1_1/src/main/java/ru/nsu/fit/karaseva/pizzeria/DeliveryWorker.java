@@ -19,7 +19,7 @@ public class DeliveryWorker implements Runnable {
   private PizzeriaOverview pizzeriaOverview;
   private DeliveryWorkers deliveryWorkers;
 
-  public DeliveryWorker(DeliveryWorkerConfig deliveryWorkerConfig){
+  public DeliveryWorker(DeliveryWorkerConfig deliveryWorkerConfig) {
     this.id = deliveryWorkerConfig.getId();
     this.deliveryTime = deliveryWorkerConfig.getDeliveryTime();
     this.capacity = deliveryWorkerConfig.getCapacity();
@@ -29,7 +29,7 @@ public class DeliveryWorker implements Runnable {
   /**
    * Returns id of the delivery worker.
    *
-   * @return
+   * @return id
    */
   public int getId() {
     return id;
@@ -38,7 +38,7 @@ public class DeliveryWorker implements Runnable {
   /**
    * Returns delivery time of the delivery worker.
    *
-   * @return
+   * @return delivery time
    */
   public int getDeliveryTime() {
     return deliveryTime;
@@ -47,7 +47,7 @@ public class DeliveryWorker implements Runnable {
   /**
    * Returns capacity of the delivery worker's bag.
    *
-   * @return
+   * @return capacity
    */
   public int getCapacity() {
     return capacity;
@@ -55,7 +55,8 @@ public class DeliveryWorker implements Runnable {
 
   /**
    * Set storage of cooked pizzas.
-   * @param itemsInStorage
+   *
+   * @param itemsInStorage storage
    */
   void setStorage(ArrayBlockingQueue<Order> itemsInStorage) {
     this.itemsInStorage = itemsInStorage;
@@ -63,7 +64,8 @@ public class DeliveryWorker implements Runnable {
 
   /**
    * Sets pizzeria overview.
-   * @param pizzeriaOverview
+   *
+   * @param pizzeriaOverview pizzeria overview
    */
   void setPizzeriaOverview(PizzeriaOverview pizzeriaOverview) {
     this.pizzeriaOverview = pizzeriaOverview;
@@ -72,7 +74,7 @@ public class DeliveryWorker implements Runnable {
   /**
    * Sets delivery workers.
    *
-   * @param deliveryWorkers
+   * @param deliveryWorkers delivery workers
    */
   void setDeliveryWorkers(DeliveryWorkers deliveryWorkers) {
     this.deliveryWorkers = deliveryWorkers;
@@ -130,7 +132,7 @@ public class DeliveryWorker implements Runnable {
                 bag.add(order);
               }
             }
-            if (pizzeriaOverview.isRestaurantClosed()){
+            if (pizzeriaOverview.isRestaurantClosed()) {
               break;
             }
             System.out.println(

@@ -5,9 +5,10 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.IntStream;
 
-/** Class that represents a pizzeria. There are bakers and delivery workers.
- * It's where the work starts: orders received, employees starts their work and finish it.
- * Then pizzeria will be closed.*/
+/**
+ * Class that represents a pizzeria. There are bakers and delivery workers. It's where the work
+ * starts: orders received, employees starts their work and finish it. Then pizzeria will be closed.
+ */
 public class Pizzeria {
   private static int waitingTimeMilliseconds;
   private final Employees employees;
@@ -18,15 +19,20 @@ public class Pizzeria {
   private ArrayBlockingQueue<Order> itemsInStorage;
 
   /**
-   *
-   * @param bakerFile
-   * @param deliveryFile
-   * @param itemsInStorage
-   * @param waitingOrders
+   * @param bakerFile file from which bakers data is read
+   * @param deliveryFile file from which delivery workers data is read
+   * @param itemsInStorage storage
+   * @param waitingOrders waiting orders
    */
-  public Pizzeria(File bakerFile, File deliveryFile, ArrayBlockingQueue<Order> itemsInStorage, LinkedBlockingQueue<Order> waitingOrders) {
+  public Pizzeria(
+      File bakerFile,
+      File deliveryFile,
+      ArrayBlockingQueue<Order> itemsInStorage,
+      LinkedBlockingQueue<Order> waitingOrders) {
     JSONReader jsonReader = new JSONReader();
-    employees = new Employees(jsonReader.readBakers(bakerFile), jsonReader.readDeliveryWorkers(deliveryFile));
+    employees =
+        new Employees(
+            jsonReader.readBakers(bakerFile), jsonReader.readDeliveryWorkers(deliveryFile));
     bakers = new Bakers();
     deliveryWorkers = new DeliveryWorkers();
     pizzeriaOverview = new PizzeriaOverview();
@@ -37,19 +43,22 @@ public class Pizzeria {
 
   /**
    * Get orders, make them, closes the restaurant, and returns the pizzeriaHeadquarters object.
+   *
    * @param numberOfOrders total number of orders
    * @return the pizzaRestaurantHeadquarters object
    */
   public PizzeriaOverview start(int numberOfOrders) {
     bakers.run(employees, itemsInStorage, waitingOrders, pizzeriaOverview);
     deliveryWorkers.run(employees, itemsInStorage, pizzeriaOverview);
-    IntStream.range(0, numberOfOrders).forEach(i -> {
-      try {
-        order();
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    });
+    IntStream.range(0, numberOfOrders)
+        .forEach(
+            i -> {
+              try {
+                order();
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+            });
     closePizzeria();
     return pizzeriaOverview;
   }
@@ -93,9 +102,10 @@ public class Pizzeria {
 
   /**
    * Give you opportunity to set waiting time in pizzeria.
+   *
    * @param waitingTime waiting time in pizzeria.
    */
-  public void setWainingTime(int waitingTime){
+  public void setWainingTime(int waitingTime) {
     waitingTimeMilliseconds = waitingTime;
   }
 }

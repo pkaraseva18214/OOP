@@ -32,11 +32,7 @@ class Bakers {
     ExecutorService executorService = Executors.newFixedThreadPool(employees.getNumberOfBakers());
 
     for (Baker baker : employees.bakers) {
-      baker.setBakers(this);
-      baker.setPizzeriaOverview(pizzeriaOverview);
-      baker.setStorage(itemsInStorage);
-      baker.setIncomingOrders(waitingOrders);
-
+      baker.setAdditionalParameters(itemsInStorage, waitingOrders, pizzeriaOverview, this);
       bakersAndPizzas.add(new FutureObjectPair(baker, executorService.submit(baker)));
     }
   }

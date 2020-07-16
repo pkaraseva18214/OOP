@@ -12,7 +12,9 @@ public class WorkTest {
     JSONReader jsonReader = new JSONReader();
     File deliveryFile = new File("src/main/resources/input");
     File bakerFile = new File("src/main/resources/baker");
-    Employees employees = new Employees(jsonReader.readBakers(bakerFile), jsonReader.readDeliveryWorkers(deliveryFile));
+    Employees employees =
+        new Employees(
+            jsonReader.readBakers(bakerFile), jsonReader.readDeliveryWorkers(deliveryFile));
 
     Assert.assertEquals(3, employees.getNumberOfBakers());
     Assert.assertEquals(3, employees.getNumberOfDeliveryWorkers());
@@ -107,18 +109,9 @@ public class WorkTest {
     Baker baker1 = new Baker(bakerConfig1);
     Baker baker2 = new Baker(bakerConfig2);
     Baker baker3 = new Baker(bakerConfig3);
-    baker1.setBakers(bakers);
-    baker1.setPizzeriaOverview(pizzeriaOverview);
-    baker1.setStorage(itemsInStorage);
-    baker1.setIncomingOrders(waitingOrders);
-    baker2.setBakers(bakers);
-    baker2.setPizzeriaOverview(pizzeriaOverview);
-    baker2.setStorage(itemsInStorage);
-    baker2.setIncomingOrders(waitingOrders);
-    baker3.setBakers(bakers);
-    baker3.setPizzeriaOverview(pizzeriaOverview);
-    baker3.setStorage(itemsInStorage);
-    baker3.setIncomingOrders(waitingOrders);
+    baker1.setAdditionalParameters(itemsInStorage, waitingOrders, pizzeriaOverview, bakers);
+    baker2.setAdditionalParameters(itemsInStorage, waitingOrders, pizzeriaOverview, bakers);
+    baker3.setAdditionalParameters(itemsInStorage, waitingOrders, pizzeriaOverview, bakers);
     pizzeriaOverview.setNumberOfBakers(3);
 
     Thread thread1 = new Thread(baker1);
