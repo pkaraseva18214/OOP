@@ -34,6 +34,7 @@ public class Baker implements Runnable {
 
   /**
    * Sets storage, waiting orders, pizzeria overview and bakers.
+   *
    * @param itemsInStorage storage
    * @param waitingOrders waiting orders
    * @param pizzeriaOverview pizzeria overview
@@ -53,46 +54,49 @@ public class Baker implements Runnable {
   @Override
   public void run() {
 
-    while (!pizzeriaOverview.isRestaurantClosed() || !waitingOrders.isEmpty()) {
+    try {
+      while (!pizzeriaOverview.isRestaurantClosed() || !waitingOrders.isEmpty()) {
 
-      Order currentOrder = null;
-      try {
-        currentOrder = waitingOrders.take();
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-      ;
-
-      try {
-        this.waitingForOrder = true;
-        bakers.lock.lock();
-        if (pizzeriaOverview.isRestaurantClosed() && waitingOrders.isEmpty()) {
-          break;
-        }
-
-        this.waitingForOrder = false;
+        Order currentOrder = null;
         try {
-          Thread.sleep(cookingTime);
+          currentOrder = waitingOrders.take();
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
-      } finally {
-        bakers.lock.unlock();
-      }
+        ;
 
-      System.out.println(
-          "Baker #" + id + " is making a pizza. Order #" + currentOrder.getId() + ".");
+        try {
+          this.waitingForOrder = true;
+          bakers.lock.lock();
+          if (pizzeriaOverview.isRestaurantClosed() && waitingOrders.isEmpty()) {
+            break;
+          }
 
-      System.out.println(
-          "Baker #" + id + " finished making a pizza. Order #" + currentOrder.getId() + ".");
-      System.out.println("Baker #" + id + " put pizza in the storage.");
-      try {
-        itemsInStorage.put(currentOrder);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
+          this.waitingForOrder = false;
+          try {
+            Thread.sleep(cookingTime);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+        } finally {
+          bakers.lock.unlock();
+        }
+
+        System.out.println(
+            "Baker #" + id + " is making a pizza. Order #" + currentOrder.getId() + ".");
+
+        System.out.println(
+            "Baker #" + id + " finished making a pizza. Order #" + currentOrder.getId() + ".");
+        System.out.println("Baker #" + id + " put pizza in the storage.");
+        try {
+          itemsInStorage.put(currentOrder);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
       }
+      pizzeriaOverview.endShiftForBaker();
+      System.out.println("Baker #" + id + " finished his work for today.");
+    } catch (NullPointerException e) {
     }
-    pizzeriaOverview.endShiftForBaker();
-    System.out.println("Baker #" + id + " finished his work for today.");
   }
 }
