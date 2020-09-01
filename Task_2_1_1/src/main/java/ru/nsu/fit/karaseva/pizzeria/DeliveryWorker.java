@@ -1,6 +1,5 @@
 package ru.nsu.fit.karaseva.pizzeria;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,10 +19,12 @@ public class DeliveryWorker implements Runnable {
   private DeliveryWorkers deliveryWorkers;
 
   public DeliveryWorker(DeliveryWorkerConfig deliveryWorkerConfig) {
-    this.id = deliveryWorkerConfig.getId();
-    this.deliveryTime = deliveryWorkerConfig.getDeliveryTime();
-    this.capacity = deliveryWorkerConfig.getCapacity();
-    this.bag = new ArrayList<>();
+    if (deliveryWorkerConfig != null) {
+      this.id = deliveryWorkerConfig.getId();
+      this.deliveryTime = deliveryWorkerConfig.getDeliveryTime();
+      this.capacity = deliveryWorkerConfig.getCapacity();
+      this.bag = new ArrayList<>();
+    } else throw new NullPointerException();
   }
 
   /**
@@ -53,29 +54,16 @@ public class DeliveryWorker implements Runnable {
     return capacity;
   }
 
-  /**
-   * Set storage of cooked pizzas.
-   *
-   * @param itemsInStorage storage
-   */
+  /** Set storage of cooked pizzas. */
   void setStorage(ArrayBlockingQueue<Order> itemsInStorage) {
     this.itemsInStorage = itemsInStorage;
   }
 
-  /**
-   * Sets pizzeria overview.
-   *
-   * @param pizzeriaOverview pizzeria overview
-   */
+  /** Sets pizzeria overview. */
   void setPizzeriaOverview(PizzeriaOverview pizzeriaOverview) {
     this.pizzeriaOverview = pizzeriaOverview;
   }
 
-  /**
-   * Sets delivery workers.
-   *
-   * @param deliveryWorkers delivery workers
-   */
   void setDeliveryWorkers(DeliveryWorkers deliveryWorkers) {
     this.deliveryWorkers = deliveryWorkers;
   }
@@ -87,11 +75,6 @@ public class DeliveryWorker implements Runnable {
 
       deliveryWorkers.lock.lock();
       try {
-        if (pizzeriaOverview.isRestaurantClosed()
-            && itemsInStorage.size() == 0
-            && pizzeriaOverview.areAllBakersFinishedWork()) {
-          break;
-        }
         for (int i = 0; i < capacity; i++) {
           Order order = null;
           if (bag.size() != 0) {
@@ -114,7 +97,8 @@ public class DeliveryWorker implements Runnable {
                       + bag.size()
                       + " pizza(s) in the bag.");
             } catch (InterruptedException e) {
-              e.printStackTrace();
+              System.out.println(e + "caused by " + e.getCause());
+              System.exit(1);
             }
           } else {
             while (bag.size() == 0) {
@@ -146,7 +130,8 @@ public class DeliveryWorker implements Runnable {
           }
         }
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        System.out.println(e + "caused by " + e.getCause());
+        System.exit(1);
       } finally {
         deliveryWorkers.lock.unlock();
       }
@@ -162,7 +147,8 @@ public class DeliveryWorker implements Runnable {
         Thread.sleep(deliveryTime);
         bag.clear();
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        System.out.println(e + "caused by " + e.getCause());
+        System.exit(1);
       }
     }
     pizzeriaOverview.endShiftForDeliveryWorker();

@@ -1,6 +1,8 @@
 package ru.nsu.fit.karaseva.pizzeria;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.junit.Assert;
@@ -9,12 +11,38 @@ import org.junit.Test;
 public class WorkTest {
   @Test
   public void allDeliveryWorkersFinishedTheirWorkSuccessfully() {
-    JSONReader jsonReader = new JSONReader();
-    File deliveryFile = new File("src/main/resources/input");
-    File bakerFile = new File("src/main/resources/baker");
-    Employees employees =
-        new Employees(
-            jsonReader.readBakers(bakerFile), jsonReader.readDeliveryWorkers(deliveryFile));
+    BakerConfig bc1 = new BakerConfig();
+    bc1.setCookingTime(10000);
+    bc1.setId(1);
+    BakerConfig bc2 = new BakerConfig();
+    bc2.setCookingTime(10000);
+    bc2.setId(2);
+    BakerConfig bc3 = new BakerConfig();
+    bc3.setCookingTime(10000);
+    bc3.setId(3);
+    List<BakerConfig> bakerConfigs = new LinkedList<BakerConfig>();
+    bakerConfigs.add(bc1);
+    bakerConfigs.add(bc2);
+    bakerConfigs.add(bc3);
+
+    DeliveryWorkerConfig dw1 = new DeliveryWorkerConfig();
+    dw1.setCapacity(3);
+    dw1.setDeliveryTime(5000);
+    dw1.setId(1);
+    DeliveryWorkerConfig dw2 = new DeliveryWorkerConfig();
+    dw2.setCapacity(3);
+    dw2.setDeliveryTime(6000);
+    dw2.setId(2);
+    DeliveryWorkerConfig dw3 = new DeliveryWorkerConfig();
+    dw3.setCapacity(3);
+    dw3.setDeliveryTime(5000);
+    dw3.setId(3);
+    List<DeliveryWorkerConfig> deliveryWorkerConfigs = new LinkedList<DeliveryWorkerConfig>();
+    deliveryWorkerConfigs.add(dw1);
+    deliveryWorkerConfigs.add(dw2);
+    deliveryWorkerConfigs.add(dw3);
+
+    Employees employees = new Employees(bakerConfigs, deliveryWorkerConfigs);
 
     Assert.assertEquals(3, employees.getNumberOfBakers());
     Assert.assertEquals(3, employees.getNumberOfDeliveryWorkers());
@@ -77,9 +105,9 @@ public class WorkTest {
   }
 
   @Test
-  public void pizzeriaAndAllStaffFinishedTheirWorkSuccessfully() {
-    File deliveryFile = new File("src/main/resources/input");
-    File bakerFile = new File("src/main/resources/baker");
+  public void pizzeriaAndAllStaffFinishedTheirWorkSuccessfully() throws InterruptedException {
+    File deliveryFile = new File("src/test/java/ru/nsu/fit/karaseva/pizzeria/deliveryWorkers");
+    File bakerFile = new File("src/test/java/ru/nsu/fit/karaseva/pizzeria/bakers");
     LinkedBlockingQueue<Order> waitingOrders = new LinkedBlockingQueue<>();
     ArrayBlockingQueue<Order> itemsInStorage = new ArrayBlockingQueue<>(9);
     Pizzeria pizzeria = new Pizzeria(bakerFile, deliveryFile, itemsInStorage, waitingOrders);
@@ -144,4 +172,5 @@ public class WorkTest {
     }
     Assert.assertTrue(pizzeriaOverview.areAllBakersFinishedWork());
   }
+
 }

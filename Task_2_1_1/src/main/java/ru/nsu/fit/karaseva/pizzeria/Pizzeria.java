@@ -17,6 +17,7 @@ public class Pizzeria {
   private final PizzeriaOverview pizzeriaOverview;
   private final LinkedBlockingQueue<Order> waitingOrders;
   private ArrayBlockingQueue<Order> itemsInStorage;
+  private static long workingTime = 5000;
 
   /**
    * @param bakerFile file from which bakers data is read
@@ -43,11 +44,9 @@ public class Pizzeria {
 
   /**
    * Get orders, make them, closes the restaurant, and returns the pizzeriaHeadquarters object.
-   *
-   * @param numberOfOrders total number of orders
-   * @return the pizzaRestaurantHeadquarters object
+   * @return the pizzeriaOverview object
    */
-  public PizzeriaOverview start(int numberOfOrders) {
+  public PizzeriaOverview start(int numberOfOrders) throws InterruptedException {
     bakers.run(employees, itemsInStorage, waitingOrders, pizzeriaOverview);
     deliveryWorkers.run(employees, itemsInStorage, pizzeriaOverview);
     IntStream.range(0, numberOfOrders)
@@ -59,13 +58,13 @@ public class Pizzeria {
                 e.printStackTrace();
               }
             });
+    Thread.sleep(workingTime);
     closePizzeria();
     return pizzeriaOverview;
   }
 
   private void order() throws InterruptedException {
     System.out.println("Order #" + pizzeriaOverview.getCurrentOrderId() + ".");
-
     Order order = new Order(pizzeriaOverview.getCurrentOrderId());
     pizzeriaOverview.updateCurrentOrderId();
     waitingOrders.put(order);
@@ -78,7 +77,8 @@ public class Pizzeria {
       try {
         Thread.sleep(waitingTimeMilliseconds);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        System.out.println(e + "caused by " + e.getCause());
+        System.exit(1);
       }
     }
 
@@ -95,7 +95,8 @@ public class Pizzeria {
       try {
         Thread.sleep(waitingTimeMilliseconds);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        System.out.println(e + "caused by " + e.getCause());
+        System.exit(1);
       }
     }
   }

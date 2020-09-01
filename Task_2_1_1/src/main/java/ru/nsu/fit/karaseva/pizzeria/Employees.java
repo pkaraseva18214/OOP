@@ -3,14 +3,22 @@ package ru.nsu.fit.karaseva.pizzeria;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /** Class that represents staff in pizzeria. */
 public class Employees {
   public List<Baker> bakers;
   private List<DeliveryWorker> deliveryWorkers;
+  private LinkedBlockingQueue<Order> waitingOrders;
+  private PizzeriaOverview pizzeriaOverview;
+  private ArrayBlockingQueue<Order> itemsInStorage;
 
   public Employees(
       List<BakerConfig> bakerConfigs, List<DeliveryWorkerConfig> deliveryWorkersConfig) {
+    waitingOrders = new LinkedBlockingQueue<>();
+    pizzeriaOverview = new PizzeriaOverview();
+    itemsInStorage = new ArrayBlockingQueue<>(9);
     bakers = new LinkedList<>();
     for (BakerConfig bakerConfig : bakerConfigs) {
       bakers.add(new Baker(bakerConfig));

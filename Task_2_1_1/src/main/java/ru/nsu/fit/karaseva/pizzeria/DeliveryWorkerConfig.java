@@ -1,8 +1,6 @@
 package ru.nsu.fit.karaseva.pizzeria;
 
-/**
- * Class that represents read data from file for delivery worker.
- */
+/** Class that represents read data from file for delivery worker. */
 public class DeliveryWorkerConfig {
   private int id;
   private int capacity;

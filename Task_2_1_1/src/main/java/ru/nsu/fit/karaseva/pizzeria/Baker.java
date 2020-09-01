@@ -15,9 +15,11 @@ public class Baker implements Runnable {
   private ArrayBlockingQueue<Order> itemsInStorage;
 
   Baker(BakerConfig bakerConfig) {
-    this.id = bakerConfig.getId();
-    this.cookingTime = bakerConfig.getCookingTime();
-    waitingForOrder = false;
+    if (bakerConfig != null) {
+      this.id = bakerConfig.getId();
+      this.cookingTime = bakerConfig.getCookingTime();
+      waitingForOrder = false;
+    } else throw new NullPointerException();
   }
 
   public boolean isWaitingForOrder() {
@@ -54,49 +56,44 @@ public class Baker implements Runnable {
   @Override
   public void run() {
 
-    try {
-      while (!pizzeriaOverview.isRestaurantClosed() || !waitingOrders.isEmpty()) {
+    while (!pizzeriaOverview.isRestaurantClosed() || !waitingOrders.isEmpty()) {
 
-        Order currentOrder = null;
-        try {
-          currentOrder = waitingOrders.take();
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-        ;
-
-        try {
-          this.waitingForOrder = true;
-          bakers.lock.lock();
-          if (pizzeriaOverview.isRestaurantClosed() && waitingOrders.isEmpty()) {
-            break;
-          }
-
-          this.waitingForOrder = false;
-          try {
-            Thread.sleep(cookingTime);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-        } finally {
-          bakers.lock.unlock();
-        }
-
-        System.out.println(
-            "Baker #" + id + " is making a pizza. Order #" + currentOrder.getId() + ".");
-
-        System.out.println(
-            "Baker #" + id + " finished making a pizza. Order #" + currentOrder.getId() + ".");
-        System.out.println("Baker #" + id + " put pizza in the storage.");
-        try {
-          itemsInStorage.put(currentOrder);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
+      Order currentOrder = null;
+      try {
+        currentOrder = waitingOrders.take();
+      } catch (InterruptedException e) {
+        System.out.println(e + "caused by " + e.getCause());
+        System.exit(1);
       }
-      pizzeriaOverview.endShiftForBaker();
-      System.out.println("Baker #" + id + " finished his work for today.");
-    } catch (NullPointerException e) {
+      ;
+
+      this.waitingForOrder = true;
+      if (pizzeriaOverview.isRestaurantClosed() && waitingOrders.isEmpty()) {
+        break;
+      }
+
+      this.waitingForOrder = false;
+      try {
+        Thread.sleep(cookingTime);
+      } catch (InterruptedException e) {
+        System.out.println(e + "caused by " + e.getCause());
+        System.exit(1);
+      }
+
+      System.out.println(
+          "Baker #" + id + " is making a pizza. Order #" + currentOrder.getId() + ".");
+
+      System.out.println(
+          "Baker #" + id + " finished making a pizza. Order #" + currentOrder.getId() + ".");
+      System.out.println("Baker #" + id + " put pizza in the storage.");
+      try {
+        itemsInStorage.put(currentOrder);
+      } catch (InterruptedException e) {
+        System.out.println(e + "caused by " + e.getCause());
+        System.exit(1);
+      }
     }
+    pizzeriaOverview.endShiftForBaker();
+    System.out.println("Baker #" + id + " finished his work for today.");
   }
 }

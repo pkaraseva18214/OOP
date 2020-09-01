@@ -1,8 +1,6 @@
 package ru.nsu.fit.karaseva.pizzeria;
 
-/**
- * Class that represents read data from file for baker.
- */
+/** Class that represents read data from file for baker. */
 public class BakerConfig {
   private int id;
   private int cookingTime;
