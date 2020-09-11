@@ -15,17 +15,22 @@ public class Employees {
   private ArrayBlockingQueue<Order> itemsInStorage;
 
   public Employees(
-      List<BakerConfig> bakerConfigs, List<DeliveryWorkerConfig> deliveryWorkersConfig) {
-    waitingOrders = new LinkedBlockingQueue<>();
-    pizzeriaOverview = new PizzeriaOverview();
-    itemsInStorage = new ArrayBlockingQueue<>(9);
+      List<BakerConfig> bakerConfigs,
+      List<DeliveryWorkerConfig> deliveryWorkersConfig,
+      ArrayBlockingQueue<Order> itemsInStorage,
+      LinkedBlockingQueue<Order> waitingOrders,
+      PizzeriaOverview pizzeriaOverview) {
+    this.itemsInStorage = itemsInStorage;
+    this.waitingOrders = waitingOrders;
+    this.pizzeriaOverview = pizzeriaOverview;
     bakers = new LinkedList<>();
     for (BakerConfig bakerConfig : bakerConfigs) {
-      bakers.add(new Baker(bakerConfig));
+      bakers.add(new Baker(bakerConfig, waitingOrders, pizzeriaOverview, itemsInStorage));
     }
     deliveryWorkers = new LinkedList<>();
     for (DeliveryWorkerConfig deliveryWorkerConfig : deliveryWorkersConfig) {
-      deliveryWorkers.add(new DeliveryWorker(deliveryWorkerConfig));
+      deliveryWorkers.add(
+          new DeliveryWorker(deliveryWorkerConfig, pizzeriaOverview, itemsInStorage));
     }
   }
 

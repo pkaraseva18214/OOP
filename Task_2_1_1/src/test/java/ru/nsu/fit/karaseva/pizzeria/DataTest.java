@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class DataTest {
+
   @Test
   public void correctlyReadData() {
     JSONReader jsonReader = new JSONReader();
@@ -63,7 +64,13 @@ public class DataTest {
     deliveryWorkerConfigs.add(dw1);
     deliveryWorkerConfigs.add(dw2);
     deliveryWorkerConfigs.add(dw3);
-    Employees employees = new Employees(bakerConfigs, deliveryWorkerConfigs);
+    Employees employees =
+        new Employees(
+            bakerConfigs,
+            deliveryWorkerConfigs,
+            new ArrayBlockingQueue<Order>(9),
+            new LinkedBlockingQueue<Order>(),
+            new PizzeriaOverview());
 
     Assert.assertEquals(3, employees.getNumberOfBakers());
     Assert.assertEquals(1, employees.getBakers().get(0).getId());
@@ -119,10 +126,12 @@ public class DataTest {
     deliveryWorkerConfigs.add(dw2);
     deliveryWorkerConfigs.add(dw3);
 
-    Employees employees = new Employees(bakerConfigs, deliveryWorkerConfigs);
+    Employees employees =
+        new Employees(
+            bakerConfigs, deliveryWorkerConfigs, itemsInStorage, waitingOrders, pizzeriaOverview);
 
-    deliveryWorkers.run(employees, itemsInStorage, pizzeriaOverview);
-    bakers.run(employees, itemsInStorage, waitingOrders, pizzeriaOverview);
+    deliveryWorkers.run(employees, pizzeriaOverview);
+    bakers.run(employees, pizzeriaOverview);
     Baker baker;
     for (FutureObjectPair a : bakers.getBakersAndPizzas()) {
       numberOfBakers++;

@@ -18,12 +18,17 @@ public class DeliveryWorker implements Runnable {
   private PizzeriaOverview pizzeriaOverview;
   private DeliveryWorkers deliveryWorkers;
 
-  public DeliveryWorker(DeliveryWorkerConfig deliveryWorkerConfig) {
+  public DeliveryWorker(
+      DeliveryWorkerConfig deliveryWorkerConfig,
+      PizzeriaOverview pizzeriaOverview,
+      ArrayBlockingQueue<Order> itemsInStorage) {
     if (deliveryWorkerConfig != null) {
       this.id = deliveryWorkerConfig.getId();
       this.deliveryTime = deliveryWorkerConfig.getDeliveryTime();
       this.capacity = deliveryWorkerConfig.getCapacity();
       this.bag = new ArrayList<>();
+      this.pizzeriaOverview = pizzeriaOverview;
+      this.itemsInStorage = itemsInStorage;
     } else throw new NullPointerException();
   }
 
@@ -52,16 +57,6 @@ public class DeliveryWorker implements Runnable {
    */
   public int getCapacity() {
     return capacity;
-  }
-
-  /** Set storage of cooked pizzas. */
-  void setStorage(ArrayBlockingQueue<Order> itemsInStorage) {
-    this.itemsInStorage = itemsInStorage;
-  }
-
-  /** Sets pizzeria overview. */
-  void setPizzeriaOverview(PizzeriaOverview pizzeriaOverview) {
-    this.pizzeriaOverview = pizzeriaOverview;
   }
 
   void setDeliveryWorkers(DeliveryWorkers deliveryWorkers) {
@@ -97,8 +92,7 @@ public class DeliveryWorker implements Runnable {
                       + bag.size()
                       + " pizza(s) in the bag.");
             } catch (InterruptedException e) {
-              System.out.println(e + "caused by " + e.getCause());
-              System.exit(1);
+              assert false;
             }
           } else {
             while (bag.size() == 0) {
@@ -130,11 +124,11 @@ public class DeliveryWorker implements Runnable {
           }
         }
       } catch (InterruptedException e) {
-        System.out.println(e + "caused by " + e.getCause());
-        System.exit(1);
+        assert false;
       } finally {
         deliveryWorkers.lock.unlock();
       }
+
       if (pizzeriaOverview.isRestaurantClosed()) {
         break;
       }
@@ -147,8 +141,7 @@ public class DeliveryWorker implements Runnable {
         Thread.sleep(deliveryTime);
         bag.clear();
       } catch (InterruptedException e) {
-        System.out.println(e + "caused by " + e.getCause());
-        System.exit(1);
+        assert false;
       }
     }
     pizzeriaOverview.endShiftForDeliveryWorker();

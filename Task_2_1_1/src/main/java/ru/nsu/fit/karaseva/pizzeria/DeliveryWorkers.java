@@ -2,7 +2,6 @@ package ru.nsu.fit.karaseva.pizzeria;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -22,10 +21,7 @@ class DeliveryWorkers {
     return orders;
   }
 
-  void run(
-      Employees employees,
-      ArrayBlockingQueue<Order> itemsInStorage,
-      PizzeriaOverview pizzeriaOverview) {
+  void run(Employees employees, PizzeriaOverview pizzeriaOverview) {
 
     pizzeriaOverview.setNumberOfDeliveryWorkers(employees.getNumberOfDeliveryWorkers());
     ExecutorService executor = Executors.newFixedThreadPool(employees.getNumberOfDeliveryWorkers());
@@ -33,9 +29,6 @@ class DeliveryWorkers {
     List<DeliveryWorker> deliveryWorkers = employees.getDeliveryWorkers();
     for (DeliveryWorker deliveryWorker : deliveryWorkers) {
       deliveryWorker.setDeliveryWorkers(this);
-      deliveryWorker.setPizzeriaOverview(pizzeriaOverview);
-      deliveryWorker.setStorage(itemsInStorage);
-
       Future<?> future = executor.submit(deliveryWorker);
       orders.add(future);
     }

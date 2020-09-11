@@ -42,14 +42,19 @@ public class WorkTest {
     deliveryWorkerConfigs.add(dw2);
     deliveryWorkerConfigs.add(dw3);
 
-    Employees employees = new Employees(bakerConfigs, deliveryWorkerConfigs);
-
-    Assert.assertEquals(3, employees.getNumberOfBakers());
-    Assert.assertEquals(3, employees.getNumberOfDeliveryWorkers());
-
     DeliveryWorkers deliveryWorkers = new DeliveryWorkers();
     PizzeriaOverview pizzeriaOverview = new PizzeriaOverview();
     ArrayBlockingQueue<Order> itemsInStorage = new ArrayBlockingQueue<>(9);
+    Employees employees =
+        new Employees(
+            bakerConfigs,
+            deliveryWorkerConfigs,
+            itemsInStorage,
+            new LinkedBlockingQueue<Order>(),
+            pizzeriaOverview);
+
+    Assert.assertEquals(3, employees.getNumberOfBakers());
+    Assert.assertEquals(3, employees.getNumberOfDeliveryWorkers());
 
     DeliveryWorkerConfig dwc1 = new DeliveryWorkerConfig();
     dwc1.setId(1);
@@ -63,18 +68,12 @@ public class WorkTest {
     dwc3.setId(3);
     dwc3.setDeliveryTime(5000);
     dwc3.setCapacity(3);
-    DeliveryWorker deliveryWorker1 = new DeliveryWorker(dwc1);
-    DeliveryWorker deliveryWorker2 = new DeliveryWorker(dwc2);
-    DeliveryWorker deliveryWorker3 = new DeliveryWorker(dwc3);
+    DeliveryWorker deliveryWorker1 = new DeliveryWorker(dwc1, pizzeriaOverview, itemsInStorage);
+    DeliveryWorker deliveryWorker2 = new DeliveryWorker(dwc2, pizzeriaOverview, itemsInStorage);
+    DeliveryWorker deliveryWorker3 = new DeliveryWorker(dwc3, pizzeriaOverview, itemsInStorage);
     deliveryWorker1.setDeliveryWorkers(deliveryWorkers);
-    deliveryWorker1.setPizzeriaOverview(pizzeriaOverview);
-    deliveryWorker1.setStorage(itemsInStorage);
     deliveryWorker2.setDeliveryWorkers(deliveryWorkers);
-    deliveryWorker2.setPizzeriaOverview(pizzeriaOverview);
-    deliveryWorker2.setStorage(itemsInStorage);
     deliveryWorker3.setDeliveryWorkers(deliveryWorkers);
-    deliveryWorker3.setPizzeriaOverview(pizzeriaOverview);
-    deliveryWorker3.setStorage(itemsInStorage);
     pizzeriaOverview.setNumberOfDeliveryWorkers(3);
 
     Thread thread1 = new Thread(deliveryWorker1);
@@ -111,7 +110,7 @@ public class WorkTest {
     LinkedBlockingQueue<Order> waitingOrders = new LinkedBlockingQueue<>();
     ArrayBlockingQueue<Order> itemsInStorage = new ArrayBlockingQueue<>(9);
     Pizzeria pizzeria = new Pizzeria(bakerFile, deliveryFile, itemsInStorage, waitingOrders);
-    PizzeriaOverview pizzeriaOverview = pizzeria.start(5);
+    PizzeriaOverview pizzeriaOverview = pizzeria.start();
 
     Assert.assertTrue(pizzeriaOverview.areAllBakersFinishedWork());
     Assert.assertTrue(pizzeriaOverview.areAllDeliveryWorkersFinishedWork());
@@ -133,13 +132,12 @@ public class WorkTest {
     bakerConfig2.setCookingTime(10000);
     BakerConfig bakerConfig3 = new BakerConfig();
     bakerConfig3.setId(3);
-    bakerConfig3.setCookingTime(10000);
-    Baker baker1 = new Baker(bakerConfig1);
-    Baker baker2 = new Baker(bakerConfig2);
-    Baker baker3 = new Baker(bakerConfig3);
-    baker1.setAdditionalParameters(itemsInStorage, waitingOrders, pizzeriaOverview, bakers);
-    baker2.setAdditionalParameters(itemsInStorage, waitingOrders, pizzeriaOverview, bakers);
-    baker3.setAdditionalParameters(itemsInStorage, waitingOrders, pizzeriaOverview, bakers);
+    Baker baker1 = new Baker(bakerConfig1, waitingOrders, pizzeriaOverview, itemsInStorage);
+    Baker baker2 = new Baker(bakerConfig2, waitingOrders, pizzeriaOverview, itemsInStorage);
+    Baker baker3 = new Baker(bakerConfig3, waitingOrders, pizzeriaOverview, itemsInStorage);
+    baker1.setBakers(bakers);
+    baker2.setBakers(bakers);
+    baker3.setBakers(bakers);
     pizzeriaOverview.setNumberOfBakers(3);
 
     Thread thread1 = new Thread(baker1);
@@ -153,6 +151,7 @@ public class WorkTest {
     waitingOrders.put(new Order(3));
     waitingOrders.put(new Order(4));
 
+    Thread.currentThread().sleep(3000);
     pizzeriaOverview.closePizzeria();
 
     try {
@@ -172,5 +171,4 @@ public class WorkTest {
     }
     Assert.assertTrue(pizzeriaOverview.areAllBakersFinishedWork());
   }
-
 }

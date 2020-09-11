@@ -3,7 +3,6 @@ package ru.nsu.fit.karaseva.pizzeria;
 import java.io.File;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.stream.IntStream;
 
 /**
  * Class that represents a pizzeria. There are bakers and delivery workers. It's where the work
@@ -17,7 +16,7 @@ public class Pizzeria {
   private final PizzeriaOverview pizzeriaOverview;
   private final LinkedBlockingQueue<Order> waitingOrders;
   private ArrayBlockingQueue<Order> itemsInStorage;
-  private static long workingTime = 5000;
+  private static long workingTime = 3000;
 
   /**
    * @param bakerFile file from which bakers data is read
@@ -30,35 +29,48 @@ public class Pizzeria {
       File deliveryFile,
       ArrayBlockingQueue<Order> itemsInStorage,
       LinkedBlockingQueue<Order> waitingOrders) {
-    JSONReader jsonReader = new JSONReader();
-    employees =
-        new Employees(
-            jsonReader.readBakers(bakerFile), jsonReader.readDeliveryWorkers(deliveryFile));
     bakers = new Bakers();
     deliveryWorkers = new DeliveryWorkers();
     pizzeriaOverview = new PizzeriaOverview();
     this.itemsInStorage = itemsInStorage;
     this.waitingOrders = waitingOrders;
+    JSONReader jsonReader = new JSONReader();
+    employees =
+        new Employees(
+            jsonReader.readBakers(bakerFile),
+            jsonReader.readDeliveryWorkers(deliveryFile),
+            itemsInStorage,
+            waitingOrders,
+            pizzeriaOverview);
+
     setWainingTime(3000);
   }
 
   /**
    * Get orders, make them, closes the restaurant, and returns the pizzeriaHeadquarters object.
+   *
    * @return the pizzeriaOverview object
    */
-  public PizzeriaOverview start(int numberOfOrders) throws InterruptedException {
-    bakers.run(employees, itemsInStorage, waitingOrders, pizzeriaOverview);
-    deliveryWorkers.run(employees, itemsInStorage, pizzeriaOverview);
-    IntStream.range(0, numberOfOrders)
-        .forEach(
-            i -> {
-              try {
+  public PizzeriaOverview start() throws InterruptedException {
+    bakers.run(employees, pizzeriaOverview);
+    deliveryWorkers.run(employees, pizzeriaOverview);
+    long curTime = System.currentTimeMillis();
+    Thread t =
+        new Thread() {
+          @Override
+          public void run() {
+            try {
+              while (curTime + workingTime > System.currentTimeMillis()) {
                 order();
-              } catch (InterruptedException e) {
-                e.printStackTrace();
+                sleep(500);
               }
-            });
-    Thread.sleep(workingTime);
+            } catch (InterruptedException e) {
+              assert false;
+            }
+          }
+        };
+    t.start();
+    Thread.currentThread().sleep(workingTime);
     closePizzeria();
     return pizzeriaOverview;
   }
@@ -77,8 +89,7 @@ public class Pizzeria {
       try {
         Thread.sleep(waitingTimeMilliseconds);
       } catch (InterruptedException e) {
-        System.out.println(e + "caused by " + e.getCause());
-        System.exit(1);
+        assert false;
       }
     }
 
@@ -95,8 +106,7 @@ public class Pizzeria {
       try {
         Thread.sleep(waitingTimeMilliseconds);
       } catch (InterruptedException e) {
-        System.out.println(e + "caused by " + e.getCause());
-        System.exit(1);
+        assert false;
       }
     }
   }

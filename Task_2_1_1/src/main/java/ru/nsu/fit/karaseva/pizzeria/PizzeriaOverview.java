@@ -9,7 +9,7 @@ public class PizzeriaOverview {
   private int numOfDeliveryWorkers;
   private int numOfBakersFinishedWork;
   private AtomicInteger numOfDeliveryWorkersFinishedWork;
-  private boolean pizzeriaIsClosed;
+  private volatile boolean pizzeriaIsClosed;
 
   /** Constructor of PizzeriaOverview Class. */
   public PizzeriaOverview() {
@@ -90,8 +90,6 @@ public class PizzeriaOverview {
 
   /** Set status of pizzeria as closed. */
   public void closePizzeria() {
-    synchronized (this) {
-      pizzeriaIsClosed = true;
-    }
+    pizzeriaIsClosed = true;
   }
 }
